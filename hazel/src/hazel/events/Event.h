@@ -4,7 +4,7 @@
 
 namespace Hazel {
 
-    // Event in Hazel are currently blocking, meaning when an event occurs it
+    // Events in Hazel are currently blocking, meaning when an event occurs it
     // immediately gets dispatched and must be dealt with right then and there.
     // For the future, a better strategey might be to buffer events in an event
     // bus and process them during the "event" part of the update stage.
@@ -27,8 +27,9 @@ namespace Hazel {
     };
 
     class HAZEL_API Event {
-		friend class EventDispatcher;
 	public:
+		bool Handled = false;
+
 		// Pure virtual functions that need to be overridden in derived class
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
@@ -39,10 +40,8 @@ namespace Hazel {
 
 		inline bool IsInCategory(EventCategory category)
 		{
-			return GetCategoryFlags() & category;
+			return GetCategoryFlags() & (int)category;
 		}
-	protected:
-		bool m_Handled = false;
 	};
 
 	class EventDispatcher
@@ -59,10 +58,10 @@ namespace Hazel {
 		template<typename T>
 		bool Dispatch(EventFn<T> func)
 		{
-			// Check that event type matches EventFn handler type (proper handler for event)
+			// Check that incoming event type matches the type of the Template used
 			if (m_Event.GetEventType() == T::GetStaticType())
 			{
-				m_Event.m_Handled = func(*(T*)&m_Event);
+				m_Event.Handled = func(*(T*)&m_Event);
 				return true;
 			}
 			return false;
