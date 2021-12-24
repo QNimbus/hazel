@@ -1,5 +1,5 @@
 #include "hzpch.h"
-#include "Window.h"
+#include "WindowsWindow.h"
 
 #include "hazel/events/KeyEvent.h"
 #include "hazel/events/MouseEvent.h"
@@ -59,7 +59,7 @@ namespace Hazel {
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
-		// Set GLFW callbacks
+		// Set GLFW event callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
 			WindowData& data = *(WindowData*) glfwGetWindowUserPointer(window);
 			data.Width = width;
@@ -100,6 +100,13 @@ namespace Hazel {
 				}			
 			}
 
+			});
+
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			KeyTypedEvent event(keycode);
+			data.EventCallback(event);
 			});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {

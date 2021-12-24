@@ -5,6 +5,11 @@
 #include "hazel/Application.h"
 #include "hazel/Layer.h"
 #include "hazel/Log.h"
+#include "hazel/imgui/ImGuiLayer.h"
+
+#include "hazel/Input.h"
+#include "hazel/KeyCodes.h"
+#include "hazel/MouseButtonCodes.h"
 
 // -- Entry Point ---------
 
