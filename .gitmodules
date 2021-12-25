@@ -1,12 +1,12 @@
 [submodule "hazel/vendor/spdlog"]
 	path = hazel/vendor/spdlog
 	url = https://github.com/gabime/spdlog
-[submodule "hazel/vendor/GLFW"]
-	path = hazel/vendor/GLFW
-	url = https://github.com/TheCherno/glfw.git
-[submodule "hazel/vendor/imgui"]
-	path = hazel/vendor/imgui
-	url = git@github.com:QNimbus/imgui.git
 [submodule "hazel/vendor/glm"]
 	path = hazel/vendor/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "hazel/vendor/GLFW"]
+	path = hazel/vendor/GLFW
+	url = git@github.com:QNimbus/glfw.git
+[submodule "hazel/vendor/imgui"]
+	path = hazel/vendor/imgui
+	url = git@github.com:QNimbus/imgui.git

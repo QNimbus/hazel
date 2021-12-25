@@ -7,27 +7,19 @@
 #include "hazel/events/ApplicationEvent.h"
 
 namespace Hazel {
-	class HAZEL_API ImGuiLayer : public Layer {
+	class ImGuiLayer : public Layer {
 	public:
 		ImGuiLayer();
 		~ImGuiLayer();
 
-		void OnAttach();
-		void OnDetach();
-		void OnUpdate();
-		void OnEvent(Event& event);
+		virtual void OnAttach() override;
+		virtual void OnDetach() override;
+		virtual void OnImGuiRender() override;
 
-		bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& event);
-		bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& event);
-		bool OnMouseMovedEvent(MouseMovedEvent& event);
-		bool OnMouseScrolledEvent(MouseScrolledEvent& event);
-		bool OnKeyPressedEvent(KeyPressedEvent& event);
-		bool OnKeyReleasedEvent(KeyReleasedEvent& event);
-		bool OnKeyTypedEvent(KeyTypedEvent& event);
-
-		bool OnWindowResizeEvent(WindowResizeEvent& event);
+		void Begin();
+		void End();
 
 	private:
-		float m_Time = 0;
+		float m_Time = 0.0f;
 	};
 }

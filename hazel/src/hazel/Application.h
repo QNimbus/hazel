@@ -5,10 +5,11 @@
 #include "Window.h"
 #include "hazel/LayerStack.h"
 #include "hazel/events/Event.h"
+#include "hazel/imgui/ImGuiLayer.h"
 #include "hazel/events/ApplicationEvent.h"
 
 namespace Hazel {
-	class HAZEL_API Application
+	class Application
 	{
 	public:
 		Application();
@@ -23,12 +24,17 @@ namespace Hazel {
 
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }
+
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 
-		std::unique_ptr<Window> m_Window;
-		bool m_Running = true;
+	private:
+		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
+		std::unique_ptr<Window> m_Window;
+
+		bool m_Running = true;
+
 	private:
 		static Application* s_Instance;
 	};

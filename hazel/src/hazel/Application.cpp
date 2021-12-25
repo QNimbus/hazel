@@ -9,8 +9,7 @@ namespace Hazel {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application()
-	{
+	Application::Application() {
 		HZ_CORE_ASSERT(!s_Instance, "Application already instantiated");
 		s_Instance = this;
 
@@ -18,6 +17,10 @@ namespace Hazel {
 
 		// Send all Window events to the application object so they can be handled by the application
 		m_Window->SetEventCallback(HZ_BIND_EVENT_FN(Application::OnEvent));
+
+		// Create ImGuiLayer
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()
@@ -26,12 +29,10 @@ namespace Hazel {
 
 	void Application::PushLayer(Layer* layer) {
 		m_LayerStack.PushLayer(layer);
-		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* overlay) {
 		m_LayerStack.PushOverlay(overlay);
-		overlay->OnAttach();
 	}
 
 	void Application::OnEvent(Event& e) {
@@ -57,6 +58,12 @@ namespace Hazel {
 			// Update layers
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
+
+			// ImGui
+			m_ImGuiLayer->Begin();
+			for (Layer* layer : m_LayerStack)
+				layer->OnImGuiRender();
+			m_ImGuiLayer->End();
 
 			// Update window
 			m_Window->OnUpdate();

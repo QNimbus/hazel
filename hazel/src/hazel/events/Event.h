@@ -26,7 +26,7 @@ namespace Hazel {
         EventCategoryMouseButton    = BIT(4)
     };
 
-    class HAZEL_API Event {
+    class Event {
 	public:
 		bool Handled = false;
 

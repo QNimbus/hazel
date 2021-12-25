@@ -1,6 +1,7 @@
 project "Glad"
   kind "StaticLib"
   language "C"
+  staticruntime "on"
 
   targetdir ("_bin/" .. outputdir .. "/%{prj.name}")
   objdir ("_obj/" .. outputdir .. "/%{prj.name}")
@@ -17,12 +18,23 @@ project "Glad"
     "include"
   }
 
+  defines
+  {
+    "_CRT_SECURE_NO_WARNINGS"
+  }
+
   filter "system:linux"
-    pic "On"
+    pic "on"
 
     systemversion "latest"
-    staticruntime "On"
 
   filter "system:windows"
     systemversion "latest"
-    staticruntime "On"
+
+  filter "configurations:Debug"
+    runtime "Debug"
+    symbols "on"
+
+  filter "configurations:Release"
+    runtime "Release"
+    optimize "on"
