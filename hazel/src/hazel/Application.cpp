@@ -1,9 +1,11 @@
 #include "hzpch.h"
 #include "Application.h"
 
-#include "hazel/Input.h"
+#include "hazel/renderer/Renderer.h"
 
-#include <glad/glad.h>
+// Temporary
+
+#include <GLFW/glfw3.h>
 
 namespace Hazel {
 
@@ -17,6 +19,7 @@ namespace Hazel {
 
 		// Send all Window events to the application object so they can be handled by the application
 		m_Window->SetEventCallback(HZ_BIND_EVENT_FN(Application::OnEvent));
+		m_Window->SetVSync(true);
 
 		// Create ImGuiLayer
 		m_ImGuiLayer = new ImGuiLayer();
@@ -52,12 +55,13 @@ namespace Hazel {
 	void Application::Run()
 	{
 		while (m_Running) {
-			glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-			
+			float time = static_cast<float>(glfwGetTime()); // Platform::GetTime()
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+
 			// Update layers
 			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate();
+				layer->OnUpdate(timestep);
 
 			// ImGui
 			m_ImGuiLayer->Begin();

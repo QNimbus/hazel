@@ -8,6 +8,12 @@
 #include "hazel/imgui/ImGuiLayer.h"
 #include "hazel/events/ApplicationEvent.h"
 
+#include "hazel/core/Timestep.h"
+
+#include "hazel/renderer/Shader.h"
+#include "hazel/renderer/Buffer.h"
+#include "hazel/renderer/VertexArray.h"
+
 namespace Hazel {
 	class Application
 	{
@@ -34,6 +40,7 @@ namespace Hazel {
 		std::unique_ptr<Window> m_Window;
 
 		bool m_Running = true;
+		float m_LastFrameTime = 0.0f;
 
 	private:
 		static Application* s_Instance;
