@@ -9,6 +9,11 @@ workspace "Hazel"
     "Dist"
   }
 
+  flags
+  {
+    "MultiProcessorCompile"
+  }
+
 -- See: https://premake.github.io/docs/Tokens/
 -- e.g. Debug-Windows-x64
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
