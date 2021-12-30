@@ -17,6 +17,7 @@
 // -- Renderer    ---------
 
 #include "hazel/renderer/Renderer.h"
+#include "hazel/renderer/Renderer2D.h"
 #include "hazel/renderer/RenderCommand.h"
 
 #include "hazel/renderer/Buffer.h"
@@ -26,7 +27,3 @@
 #include "hazel/renderer/CameraController.h"
 
 #include "hazel/renderer/Camera.h"
-
-// -- Entry Point ---------
-#include "hazel/core/Entrypoint.h"
-// -- Entry Point ---------

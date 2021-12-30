@@ -33,11 +33,11 @@ namespace Hazel {
 	struct BufferElement {
 		std::string Name;
 		ShaderDataType Type;
-		uint32_t Offset;
+		size_t Offset;
 		uint32_t Size;
 		bool Normalized;
 
-		BufferElement() {};
+		BufferElement() = default;
 
 		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
 			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized) {
@@ -103,7 +103,7 @@ namespace Hazel {
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
-		static VertexBuffer* Create(float* vertices, uint32_t size);
+		static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
 	};
 
 	class IndexBuffer {
@@ -115,7 +115,7 @@ namespace Hazel {
 
 		virtual uint32_t GetCount() const = 0;
 
-		static IndexBuffer* Create(uint32_t* vertices, uint32_t count);
+		static Ref<IndexBuffer> Create(uint32_t* vertices, uint32_t count);
 	};
 
 }

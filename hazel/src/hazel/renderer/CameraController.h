@@ -12,8 +12,8 @@ namespace Hazel {
 	public:
 		OrthographicCameraController(float aspectRatio, bool rotation = false);
 
-		Camera& GetCamera() { return m_Camera; }
-		const Camera& GetCamera() const { return m_Camera; }
+		OrthographicCamera& GetCamera() { return m_Camera; }
+		const OrthographicCamera& GetCamera() const { return m_Camera; }
 
 		void OnUpdate(Timestep ts);
 		void OnEvent(Event& event);
