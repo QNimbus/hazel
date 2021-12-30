@@ -95,17 +95,18 @@ public:
 			}
 		)";
 
-		m_Shader = Hazel::Shader::Create(vertexSrc, fragmentSrc);
+		m_Shader = Hazel::Shader::Create("VertexPosColor", vertexSrc, fragmentSrc);
 
 		m_FlatShader = Hazel::Shader::Create("assets/shaders/FlatColor.glsl");
 
+		
+		auto textureShader = m_ShaderLibrary.Load("TextureShader", "assets/shaders/Texture.glsl");
 
-		m_TextureShader = Hazel::Shader::Create("assets/shaders/Texture.glsl");
 		m_Texture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
 		m_TextureLogo = Hazel::Texture2D::Create("assets/textures/ChernoLogo.png");
 
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->Bind();
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
 	}
 
 	void OnUpdate(Hazel::Timestep ts) override {
@@ -147,13 +148,15 @@ public:
 			}
 		}
 
+		auto textureShader = m_ShaderLibrary.Get("TextureShader");
+
 		// Large square
 		m_Texture->Bind();		
-		Hazel::Renderer::Submit(m_TextureShader, m_SquareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Hazel::Renderer::Submit(textureShader, m_SquareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		// Transparent logo
 		m_TextureLogo->Bind();		
-		Hazel::Renderer::Submit(m_TextureShader, m_SquareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Hazel::Renderer::Submit(textureShader, m_SquareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		// Triangle
 		//Hazel::Renderer::Submit(m_Shader, m_VertexArray);
@@ -183,9 +186,11 @@ public:
 	};
 
 private:
+	Hazel::ShaderLibrary m_ShaderLibrary;
+
 	Hazel::Ref<Hazel::Shader> m_Shader;
 	Hazel::Ref<Hazel::Shader> m_FlatShader;
-	Hazel::Ref<Hazel::Shader> m_TextureShader;
+	//Hazel::Ref<Hazel::Shader> m_TextureShader;
 	Hazel::Ref<Hazel::VertexArray> m_VertexArray;
 	Hazel::Ref<Hazel::VertexArray> m_SquareVertexArray;
 
