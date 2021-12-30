@@ -1,7 +1,7 @@
 #include "hzpch.h"
 #include "WindowsInput.h"
 
-#include "hazel/Application.h"
+#include "hazel/core/Application.h"
 
 #include <GLFW/glfw3.h>
 

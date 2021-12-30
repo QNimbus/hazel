@@ -3,7 +3,7 @@
 #include "Core.h"
 
 #include "Window.h"
-#include "hazel/LayerStack.h"
+#include "hazel/core/LayerStack.h"
 #include "hazel/events/Event.h"
 #include "hazel/imgui/ImGuiLayer.h"
 #include "hazel/events/ApplicationEvent.h"
@@ -32,7 +32,8 @@ namespace Hazel {
 		inline Window& GetWindow() { return *m_Window; }
 
 	private:
-		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowClose(WindowCloseEvent& event);
+		bool OnWindowResize(WindowResizeEvent& event);
 
 	private:
 		ImGuiLayer* m_ImGuiLayer;
@@ -40,6 +41,7 @@ namespace Hazel {
 		std::unique_ptr<Window> m_Window;
 
 		bool m_Running = true;
+		bool m_Minimized = false;
 		float m_LastFrameTime = 0.0f;
 
 	private:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "hazel/Window.h"
+#include "hazel/core/Window.h"
 #include "hazel/renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>

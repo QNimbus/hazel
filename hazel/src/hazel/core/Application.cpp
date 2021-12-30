@@ -45,6 +45,7 @@ namespace Hazel {
 
 		// Dispatch a WindowCloseEvent to the Application::OnWindowClose event handler
 		dispatcher.Dispatch<WindowCloseEvent>(HZ_BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(HZ_BIND_EVENT_FN(Application::OnWindowResize));
 
 		// Pass events to layers in the layer stack
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); ) {
@@ -61,9 +62,11 @@ namespace Hazel {
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			// Update layers
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(timestep);
+			if (!m_Minimized) {
+				// Update layers
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate(timestep);
+			}			
 
 			// ImGui
 			m_ImGuiLayer->Begin();
@@ -76,8 +79,19 @@ namespace Hazel {
 		}
 	}
 
-	bool Application::OnWindowClose(WindowCloseEvent& e) {
+	bool Application::OnWindowClose(WindowCloseEvent& event) {
 		m_Running = false;
 		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& event) {
+		if (event.GetWidth() == 0 || event.GetHeight() == 0) {
+			m_Minimized = true;
+			return false;
+		}
+		
+		m_Minimized = false;
+		Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
+		return false;
 	}
 }

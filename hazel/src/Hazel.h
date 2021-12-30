@@ -2,15 +2,15 @@
 
 // For use by client applications that want to use the engine
 
-#include "hazel/Application.h"
-#include "hazel/Layer.h"
-#include "hazel/Log.h"
+#include "hazel/core/Application.h"
+#include "hazel/core/Layer.h"
+#include "hazel/core/Log.h"
 
 #include "hazel/core/Timestep.h"
 
-#include "hazel/Input.h"
-#include "hazel/KeyCodes.h"
-#include "hazel/MouseButtonCodes.h"
+#include "hazel/core/Input.h"
+#include "hazel/core/KeyCodes.h"
+#include "hazel/core/MouseButtonCodes.h"
 
 #include "hazel/imgui/ImGuiLayer.h"
 
@@ -23,9 +23,10 @@
 #include "hazel/renderer/Shader.h"
 #include "hazel/renderer/Texture.h"
 #include "hazel/renderer/VertexArray.h"
+#include "hazel/renderer/CameraController.h"
 
 #include "hazel/renderer/Camera.h"
 
 // -- Entry Point ---------
-#include "hazel/Entrypoint.h"
+#include "hazel/core/Entrypoint.h"
 // -- Entry Point ---------
