@@ -10,11 +10,17 @@ int main(int argc, char** argv) {
 		
 	HZ_TRACE("Initialized log...");
 
+	HZ_PROFILE_BEGIN_SESSION("init", "HazelProfile-Init.json");
 	auto app = Hazel::CreateApplication();
+	HZ_PROFILE_END_SESSION();
 
+	HZ_PROFILE_BEGIN_SESSION("runtime", "HazelProfile-Runtime.json");
 	app->Run();
+	HZ_PROFILE_END_SESSION();
 
+	HZ_PROFILE_BEGIN_SESSION("teardown", "HazelProfile-Teardown.json");
 	delete app;
+	HZ_PROFILE_END_SESSION();
 }
 
 #endif // HZ_PLATFORM_WINDOWS

@@ -1,5 +1,5 @@
 #include "hzpch.h"
-#include "Application.h"
+#include "hazel/core/Application.h"
 
 #include "hazel/renderer/Renderer.h"
 
