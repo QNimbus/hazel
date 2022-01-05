@@ -1,6 +1,8 @@
 #include "hzpch.h"
 #include "WindowsWindow.h"
 
+#include "hazel/renderer/Renderer.h"
+
 #include "hazel/events/KeyEvent.h"
 #include "hazel/events/MouseEvent.h"
 #include "hazel/events/ApplicationEvent.h"
@@ -9,7 +11,7 @@
 
 namespace Hazel {
 
-	static bool s_GLFWInitialized = false;
+	static uint8_t s_GLFWWindowCount = 0;
 
 	static void GLFWErrorCallback(int errorCode, const char* description) {
 		HZ_CORE_ERROR("GFLW Error ({0}): {1}", errorCode, description);
@@ -22,37 +24,55 @@ namespace Hazel {
 
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		Init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		Shutdown();
 	}
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
 
 		HZ_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
-		if (!s_GLFWInitialized)
+		if (s_GLFWWindowCount == 0)
 		{
+			HZ_PROFILE_SCOPE("glfwInit");
+
 			// TODO: glfwTerminate on system shutdown
 			int success = glfwInit();
 			HZ_CORE_ASSERT(success, "Could not intialize GLFW!");
 
 			// Set GLFW error callback
 			glfwSetErrorCallback(GLFWErrorCallback);
-			s_GLFWInitialized = true;
 		}
 
-		// Create GLFW window
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		{
+			HZ_PROFILE_SCOPE("glfwCreateWindow");
+			
+			#if defined(HZ_DEBUG)
+			if (Renderer::GetAPI() == RendererAPI::API::OpenGL)
+				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+			#endif
 
-		m_Context = new OpenGLContext(m_Window);
+			// Create GLFW window
+			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+			++s_GLFWWindowCount;
+		}
+
+
+		m_Context = GraphicsContext::Create(m_Window);
 		m_Context->Init();
 
 		// Point GLFW user pointer at our data struct
