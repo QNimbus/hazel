@@ -23,9 +23,11 @@ namespace Hazel {
 
 		Renderer::Init();
 
-		// Create ImGuiLayer
+		#ifdef HZ_DEBUG
+		// Create ImGuiLayer -- Debug only
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
+		#endif
 	}
 
 	Application::~Application()
@@ -68,11 +70,13 @@ namespace Hazel {
 					layer->OnUpdate(timestep);
 			}			
 
-			// ImGui
+			#ifdef HZ_DEBUG
+			// ImGui -- debug only
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 				layer->OnImGuiRender();
 			m_ImGuiLayer->End();
+			#endif
 
 			// Update window
 			m_Window->OnUpdate();

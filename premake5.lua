@@ -110,6 +110,7 @@ project "Sandbox"
   location "sandbox"
   kind "ConsoleApp"
   language "C++"
+  cppdialect "C++17"
   staticruntime "on"
 
   targetdir ("_bin/" .. outputdir .. "/%{prj.name}")
