@@ -23,6 +23,8 @@
 #include "hazel/renderer/Buffer.h"
 #include "hazel/renderer/Shader.h"
 #include "hazel/renderer/Texture.h"
+#include "hazel/renderer/Framebuffer.h"
+#include "hazel/renderer/SubTexture2D.h"
 #include "hazel/renderer/VertexArray.h"
 #include "hazel/renderer/CameraController.h"
 

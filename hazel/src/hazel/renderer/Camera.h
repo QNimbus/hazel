@@ -23,17 +23,17 @@ namespace Hazel{
 		void SetProjection(float left, float right, float bottom, float top);
 
 		virtual const glm::vec3& GetPosition() const { return m_Position; }
-		virtual void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateViewMatrix(); };
+		virtual void SetPosition(const glm::vec3& position) { m_Position = position; CalculateViewMatrix(); };
 
 		virtual float GetRotation() const { return m_Rotation; }
-		virtual void SetRotation(float rotation) { m_Rotation = rotation; RecalculateViewMatrix(); }
+		virtual void SetRotation(float rotation) { m_Rotation = rotation; CalculateViewMatrix(); }
 
 		virtual const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		virtual const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		virtual const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
 
 	private:
-		void RecalculateViewMatrix();
+		void CalculateViewMatrix();
 
 	private:
 		glm::mat4 m_ProjectionMatrix;

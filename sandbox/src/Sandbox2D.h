@@ -22,18 +22,11 @@ private:
 	ParticleProps m_Particle;
 	ParticleSystem m_ParticleSystem;
 
-	// Temp
-	/*Hazel::Ref<Hazel::Shader> m_FlatColorShader;
-	Hazel::Ref<Hazel::VertexArray> m_SquareVertexArray;*/
-
+	// Temp	
 	Hazel::Ref<Hazel::Texture2D> m_CheckerboardTexture;
+	Hazel::Ref<Hazel::Texture2D> m_SpriteSheet;
+	Hazel::Ref<Hazel::SubTexture2D> m_SpriteBush, m_SpriteBarrel, m_SpriteTree;
+	Hazel::Ref<Hazel::FrameBuffer> m_FrameBuffer;
 
-	struct ProfileResult {
-		const char* Name;
-		float Time;
-	};
-
-	std::vector<ProfileResult> m_ProfileResults;
-
-	//glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
+	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 };

@@ -2,6 +2,7 @@
 
 #include "hazel/renderer/Camera.h"
 #include "hazel/renderer/Texture.h"
+#include "hazel/renderer/SubTexture2D.h"
 
 namespace Hazel {
 
@@ -23,11 +24,15 @@ namespace Hazel {
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, Ref<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
+		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, Ref<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
 
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float angle, const glm::vec4& color);
 		static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float angle, const glm::vec4& color);
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float angle, Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
 		static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float angle, Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
+		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float angle, Ref<SubTexture2D>& subTexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
+		static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float angle, Ref<SubTexture2D>& subTtexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
 
 		//Statistics
 		struct Statistics {

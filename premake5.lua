@@ -74,8 +74,7 @@ project "Hazel"
 
   defines
   {
-    "_CRT_SECURE_NO_WARNINGS",
-    "HZ_ENABLE_ASSERTS"
+    "_CRT_SECURE_NO_WARNINGS"
   }
 
   filter "system:windows"
@@ -90,8 +89,7 @@ project "Hazel"
 
   filter { "configurations:Debug"}
     defines {
-      "HZ_DEBUG",
-      "HZ_ENABLE_ASSERTS"
+      "HZ_DEBUG"
     }
     symbols "on"
     runtime "Debug"
@@ -147,8 +145,7 @@ project "Sandbox"
 
   filter { "configurations:Debug"}
     defines {
-      "HZ_DEBUG",
-      "HZ_ENABLE_ASSERTS"
+      "HZ_DEBUG"
     }
     symbols "on"
     runtime "Debug"

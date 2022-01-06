@@ -16,6 +16,10 @@ namespace Hazel {
 				return CreateScope<OpenGLContext>(static_cast<GLFWwindow*>(window));
 				break;
 			}
+			default: {
+				return nullptr;
+				break;
+			}
 		}
 	}
 }

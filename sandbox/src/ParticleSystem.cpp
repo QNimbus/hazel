@@ -14,7 +14,7 @@ void ParticleSystem::OnUpdate(Hazel::Timestep ts) {
 		if (!particle.Active)
 			continue;
 
-		if (particle.LifeRemaining <= 0.0f)
+		if (particle.LifeRemaining < 0.0f)
 		{
 			particle.Active = false;
 			continue;

@@ -50,10 +50,10 @@ namespace Hazel {
 		dispatcher.Dispatch<WindowResizeEvent>(HZ_BIND_EVENT_FN(Application::OnWindowResize));
 
 		// Pass events to layers in the layer stack
-		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); ) {
-			(*--it)->OnEvent(e);
+		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it) {
 			if (e.Handled)
 				break;
+			(*it)->OnEvent(e);
 		}
 	}
 
@@ -81,6 +81,11 @@ namespace Hazel {
 			// Update window
 			m_Window->OnUpdate();
 		}
+	}
+
+	void Application::Close()
+	{
+		m_Running = false;
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& event) {

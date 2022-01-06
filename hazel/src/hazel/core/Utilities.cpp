@@ -5,10 +5,10 @@ namespace Hazel::Utilities {
 
 	glm::vec4 Color::RGBToVec4RGB(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
 	{
-		float R = red / 256;
-		float G = green / 256;
-		float B = blue / 256;
-		float A = alpha / 256;
+		float R = (float)(red / 256);
+		float G = (float)(green / 256);
+		float B = (float)(blue / 256);
+		float A = (float)(alpha / 256);
 
 		return {R, G, B, A };
 	}
