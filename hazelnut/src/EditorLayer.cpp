@@ -29,6 +29,13 @@ namespace Hazel {
 			frameBufferSpecification.Height = 720;
 			m_FrameBuffer = FrameBuffer::Create(frameBufferSpecification);
 		}
+
+		{
+			m_ActiveScene = CreateRef<Scene>();
+
+			m_EntitySquare = m_ActiveScene->CreateEntity("Green square");
+			m_EntitySquare.AddComponent<SpriteRendererComponent>();
+		}
 	}
 
 	void EditorLayer::OnDetach() {
@@ -110,6 +117,15 @@ namespace Hazel {
 				ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 				ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
+				if (m_EntitySquare) {
+					ImGui::Separator();
+					ImGui::Text("%s", m_EntitySquare.GetComponent<TagComponent>().Tag.c_str());
+
+					auto& color = m_EntitySquare.GetComponent<SpriteRendererComponent>().Color;
+					ImGui::ColorEdit4("Square Color", glm::value_ptr(color));
+					ImGui::Separator();
+				}
+
 				ImGui::End();
 			}
 
@@ -123,16 +139,6 @@ namespace Hazel {
 				m_ViewportHovered = ImGui::IsWindowHovered();
 				Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
 				
-#if 0
-				// Did viewport dimensions change?
-				if (m_ViewPortSize != *((glm::vec2*)&viewPortPanelSize)) {
-					m_FrameBuffer->Resize((uint32_t)viewPortPanelSize.x, (uint32_t)viewPortPanelSize.y);
-					
-
-					m_CameraController.OnResize(viewPortPanelSize.x, viewPortPanelSize.y);
-				}
-#endif
-
 				ImVec2 viewPortPanelSize = ImGui::GetContentRegionAvail();
 				m_ViewPortSize = { viewPortPanelSize.x, viewPortPanelSize.y };
 
@@ -171,19 +177,20 @@ namespace Hazel {
 				m_CameraController.OnUpdate(ts);
 		}
 
-		//Reset statistics
+		// Reset statistics
 		Renderer2D::ResetStatistics();
 
+
+		// Render preparation
 		{
 			HZ_PROFILE_SCOPE("OnUpdate::Render::Prep");
 
 			m_FrameBuffer->Bind();
 
-			// Render preparation
 			RenderCommand::SetClearColor({ 0.07f, 0.07f, 0.07f, 1.0f });
 			RenderCommand::Clear();
+		}		
 
-		}
 		{
 			HZ_PROFILE_SCOPE("OnUpdate::Render::Draw");
 
@@ -192,24 +199,12 @@ namespace Hazel {
 
 			// Render draw
 			Renderer2D::BeginScene(m_CameraController.GetCamera());
-			Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.5f, 0.5f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-			Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(-rotation), { 0.8f, 0.2f, 0.3f, 1.0f });
-			Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f }, { 0.5f, 0.5f }, glm::radians(rotation), { 0.8f, 0.2f, 0.3f, 1.0f });
-			Renderer2D::DrawQuad({ 0.5f, -0.5f, 0.1f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-			Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 15.0f, 15.0f }, m_CheckerboardTexture, 15.0f);
-			Renderer2D::EndScene();
-
-			Renderer2D::BeginScene(m_CameraController.GetCamera());
-			for (float y = -5.0; y <= 5.0f; y += 0.5f) {
-				for (float x = -5.0; x <= 5.0f; x += 0.5f) {
-					glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.7f };
-					Renderer2D::DrawQuad({ x, y }, { 0.45f, 0.45f }, color);
-				}
-			}
+			m_ActiveScene->OnUpdate(ts);
 			Renderer2D::EndScene();
 
 			m_FrameBuffer->Unbind();
 		}
+
 	}
 
 	void EditorLayer::OnEvent(Hazel::Event& event) {
