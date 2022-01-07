@@ -1,11 +1,19 @@
 #pragma once
 
 #include "hazel/core/Core.h"
+#include "hazel/core/KeyCodes.h"
+#include "hazel/core/MouseCodes.h"
 
 namespace Hazel {
 
 	class Input {
 	public:
+		static bool IsKeyPressed(KeyCode key);
+		static bool IsMouseButtonPressed(MouseCode button);
+		static std::pair<float, float> GetMousePosition();
+		static float GetMouseX();
+		static float GetMouseY();
+#if 0
 		// Delete copy constructor
 		Input(const Input&) = delete;
 		Input& operator=(const Input&) = delete;
@@ -29,6 +37,6 @@ namespace Hazel {
 
 	private:
 		static Input* s_Instance;
-
+#endif
 	};
 }

@@ -24,5 +24,7 @@ namespace Hazel {
 		Ref<FrameBuffer> m_FrameBuffer;
 
 		glm::vec2 m_ViewPortSize = { 0.0f, 0.0f };
+
+		bool m_ViewportFocused = false, m_ViewportHovered = false;
 	};
 }

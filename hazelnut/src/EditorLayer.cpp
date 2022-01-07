@@ -117,15 +117,24 @@ namespace Hazel {
 				// ImGui view port
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 				ImGui::Begin("viewport");
-				ImVec2 viewPortPanelSize = ImGui::GetContentRegionAvail();
+
+				// Determine whether events should be consumed/blocked by ImGui depending on Focus/Hover status
+				m_ViewportFocused = ImGui::IsWindowFocused();
+				m_ViewportHovered = ImGui::IsWindowHovered();
+				Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
 				
+#if 0
 				// Did viewport dimensions change?
 				if (m_ViewPortSize != *((glm::vec2*)&viewPortPanelSize)) {
 					m_FrameBuffer->Resize((uint32_t)viewPortPanelSize.x, (uint32_t)viewPortPanelSize.y);
-					m_ViewPortSize = { viewPortPanelSize.x, viewPortPanelSize.y };
+					
 
 					m_CameraController.OnResize(viewPortPanelSize.x, viewPortPanelSize.y);
 				}
+#endif
+
+				ImVec2 viewPortPanelSize = ImGui::GetContentRegionAvail();
+				m_ViewPortSize = { viewPortPanelSize.x, viewPortPanelSize.y };
 
 				uint32_t textureID = m_FrameBuffer->GetColorAttachmentRendererID();
 				ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
@@ -141,10 +150,25 @@ namespace Hazel {
 	void EditorLayer::OnUpdate(Timestep ts) {
 		HZ_PROFILE_FUNCTION();
 
+		// Resize
+		{
+			HZ_PROFILE_SCOPE("OnUpdate::Resize");
+
+			if (FrameBufferSpecification spec = m_FrameBuffer->GetSpecification();
+				m_ViewPortSize.x > 0.0f && m_ViewPortSize.y > 0.0f && // zero sized framebuffer is invalid
+				(spec.Width != m_ViewPortSize.x || spec.Height != m_ViewPortSize.y))
+			{
+				m_FrameBuffer->Resize((uint32_t)m_ViewPortSize.x, (uint32_t)m_ViewPortSize.y);
+				m_CameraController.OnResize(m_ViewPortSize.x, m_ViewPortSize.y);
+			}
+		}
+
 		// Update
 		{
-			HZ_PROFILE_SCOPE("OnUpdate:: CameraController");
-			m_CameraController.OnUpdate(ts);
+			HZ_PROFILE_SCOPE("OnUpdate::CameraController");
+
+			if (m_ViewportFocused)
+				m_CameraController.OnUpdate(ts);
 		}
 
 		//Reset statistics
