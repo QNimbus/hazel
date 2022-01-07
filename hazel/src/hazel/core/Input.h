@@ -9,6 +9,7 @@ namespace Hazel {
 		// Delete copy constructor
 		Input(const Input&) = delete;
 		Input& operator=(const Input&) = delete;
+		virtual ~Input() = default;
 
 		inline static bool IsKeyPressed(int keycode) { return s_Instance->IsKeyPressedImpl(keycode); }
 

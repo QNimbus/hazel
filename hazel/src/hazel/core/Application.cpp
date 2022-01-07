@@ -11,11 +11,11 @@ namespace Hazel {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application() {
+	Application::Application(const std::string& name) {
 		HZ_CORE_ASSERT(!s_Instance, "Application already instantiated");
 		s_Instance = this;
 
-		m_Window = std::unique_ptr<Window>(Window::Create());
+		m_Window = std::unique_ptr<Window>(Window::Create(WindowProps(name)));
 
 		// Send all Window events to the application object so they can be handled by the application
 		m_Window->SetEventCallback(HZ_BIND_EVENT_FN(Application::OnEvent));

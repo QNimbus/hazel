@@ -30,6 +30,9 @@ namespace Hazel {
 	public:
 		bool Handled = false;
 
+	public:
+		virtual ~Event() = default;
+
 		// Pure virtual functions that need to be overridden in derived class
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
