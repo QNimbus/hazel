@@ -1,4 +1,4 @@
-#include <Hazel.h>
+#include "hznpch.h"
 // -- Entry Point ---------
 #include <hazel/core/Entrypoint.h>
 // -- Entry Point ---------

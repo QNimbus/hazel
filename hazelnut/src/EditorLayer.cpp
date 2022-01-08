@@ -1,3 +1,4 @@
+#include "hznpch.h"
 #include "EditorLayer.h"
 
 #include <imgui/imgui.h>
@@ -88,6 +89,9 @@ namespace Hazel {
 			m_EntityCamera2.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 			m_EntitySquare.AddComponent<NativeScriptComponent>().Bind<RandomizeSquareColor>();
 		}
+
+		// Panels
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach() {
@@ -158,6 +162,10 @@ namespace Hazel {
 				ImGui::EndMenuBar();
 			}
 
+			// Hierarchy panel
+			m_SceneHierarchyPanel.OnImGuiRender();
+
+			// Settings panel
 			{
 				// ImGui Settings window
 				ImGui::Begin("Settings");
@@ -197,8 +205,8 @@ namespace Hazel {
 				ImGui::End();
 			}
 
+			// Viewport
 			{
-				// ImGui view port
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 				ImGui::Begin("viewport");
 

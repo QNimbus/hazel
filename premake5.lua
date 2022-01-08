@@ -116,6 +116,9 @@ project "Hazelnut"
   targetdir ("_bin/" .. outputdir .. "/%{prj.name}")
   objdir ("_obj/" .. outputdir .. "/%{prj.name}")
 
+  pchheader "hznpch.h"
+  pchsource "%{prj.name}/src/hznpch.cpp"
+
   files
   {
     "%{prj.name}/src/**.h",
@@ -127,6 +130,7 @@ project "Hazelnut"
     "hazel/src",
     "hazel/vendor",
     "hazel/vendor/spdlog/include",
+    "hazelnut/src",
     "%{IncludeDir.glm}",
     "%{IncludeDir.entt}"
   }

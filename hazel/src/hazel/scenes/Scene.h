@@ -25,6 +25,6 @@ namespace Hazel {
 		float m_ViewportWidth, m_ViewportHeight;
 
 		friend class Entity;
-
+		friend class SceneHierarchyPanel;
 	};
 }
