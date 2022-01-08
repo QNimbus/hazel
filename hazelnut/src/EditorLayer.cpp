@@ -33,7 +33,11 @@ namespace Hazel {
 		{
 			m_ActiveScene = CreateRef<Scene>();
 
+			m_EntityCamera = m_ActiveScene->CreateEntity("Scene camera");
+			m_EntityCamera2 = m_ActiveScene->CreateEntity("Clip space camera");
 			m_EntitySquare = m_ActiveScene->CreateEntity("Green square");
+			m_EntityCamera.AddComponent<CameraComponent>(glm::ortho( -16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+			m_EntityCamera2.AddComponent<CameraComponent>(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f)).Primary = false;
 			m_EntitySquare.AddComponent<SpriteRendererComponent>();
 		}
 	}
@@ -126,6 +130,13 @@ namespace Hazel {
 					ImGui::Separator();
 				}
 
+				ImGui::DragFloat3("Camera transform", glm::value_ptr(m_EntityCamera2.GetComponent<TransformComponent>().Transform[3]));
+
+				if (ImGui::Checkbox("Primary camera", &m_PrimaryCamera)) {
+					m_EntityCamera.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
+					m_EntityCamera2.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
+				}
+
 				ImGui::End();
 			}
 
@@ -194,13 +205,8 @@ namespace Hazel {
 		{
 			HZ_PROFILE_SCOPE("OnUpdate::Render::Draw");
 
-			static float rotation = 0.0f;
-			rotation += ts * 100.0f;
-
 			// Render draw
-			Renderer2D::BeginScene(m_CameraController.GetCamera());
 			m_ActiveScene->OnUpdate(ts);
-			Renderer2D::EndScene();
 
 			m_FrameBuffer->Unbind();
 		}

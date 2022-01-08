@@ -3,6 +3,20 @@
 #include <glm/glm.hpp>
 
 namespace Hazel{
+
+	class CameraComp {
+	public:
+		CameraComp() = default;
+		CameraComp(const glm::mat4& projection)
+			: m_Projection(projection) {};
+
+		//glm::mat4& GetProjection() { return m_Projection; }
+		const glm::mat4& GetProjection() const { return m_Projection; }
+
+	private:
+		glm::mat4 m_Projection = glm::mat4{ 1.0f };
+	};
+
 	class Camera {
 	public:
 		virtual const glm::vec3& GetPosition() const = 0;
@@ -27,7 +41,6 @@ namespace Hazel{
 
 		virtual float GetRotation() const { return m_Rotation; }
 		virtual void SetRotation(float rotation) { m_Rotation = rotation; CalculateViewMatrix(); }
-
 		virtual const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		virtual const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		virtual const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
