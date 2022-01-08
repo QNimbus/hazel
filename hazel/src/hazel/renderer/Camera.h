@@ -9,11 +9,12 @@ namespace Hazel{
 		CameraComp() = default;
 		CameraComp(const glm::mat4& projection)
 			: m_Projection(projection) {};
+		virtual ~CameraComp() = default;
 
-		//glm::mat4& GetProjection() { return m_Projection; }
+		glm::mat4& GetProjection() { return m_Projection; }
 		const glm::mat4& GetProjection() const { return m_Projection; }
 
-	private:
+	protected:
 		glm::mat4 m_Projection = glm::mat4{ 1.0f };
 	};
 

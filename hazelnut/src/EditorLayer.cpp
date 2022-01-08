@@ -35,10 +35,40 @@ namespace Hazel {
 
 			m_EntityCamera = m_ActiveScene->CreateEntity("Scene camera");
 			m_EntityCamera2 = m_ActiveScene->CreateEntity("Clip space camera");
-			m_EntitySquare = m_ActiveScene->CreateEntity("Green square");
-			m_EntityCamera.AddComponent<CameraComponent>(glm::ortho( -16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
-			m_EntityCamera2.AddComponent<CameraComponent>(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f)).Primary = false;
+			m_EntitySquare = m_ActiveScene->CreateEntity("Square");
+			m_EntityCamera.AddComponent<CameraComponent>();
+			auto& secondCam = m_EntityCamera2.AddComponent<CameraComponent>();
+			secondCam.Primary = false;
+			secondCam.Camera.SetOrthographicSize(4.0f);
 			m_EntitySquare.AddComponent<SpriteRendererComponent>();
+
+			class CameraController : public ScriptableEntity {
+			public:
+				void OnCreate() {
+					std::cout << "OnCreate was called"  << std::endl;
+				}
+
+				void OnDestroy() {
+
+				}
+
+				void OnUpdate(Timestep ts) {
+					static float speed = 5.0f;
+
+					auto& transform = GetComponent<TransformComponent>().Transform;
+					
+					if (Input::IsKeyPressed(KeyCode::A))
+						transform[3].x -= speed * ts;
+					else if (Input::IsKeyPressed(KeyCode::D))
+						transform[3].x += speed * ts;
+					if (Input::IsKeyPressed(KeyCode::S))
+						transform[3].y -= speed * ts;
+					else if (Input::IsKeyPressed(KeyCode::W))
+						transform[3].y += speed * ts;
+				}
+			};
+
+			m_EntityCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 		}
 	}
 
@@ -130,11 +160,20 @@ namespace Hazel {
 					ImGui::Separator();
 				}
 
-				ImGui::DragFloat3("Camera transform", glm::value_ptr(m_EntityCamera2.GetComponent<TransformComponent>().Transform[3]));
+				ImGui::DragFloat2("Cam1 transform", glm::value_ptr(m_EntityCamera.GetComponent<TransformComponent>().Transform[3]));
 
-				if (ImGui::Checkbox("Primary camera", &m_PrimaryCamera)) {
-					m_EntityCamera.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
-					m_EntityCamera2.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
+				auto& cam1 = m_EntityCamera.GetComponent<CameraComponent>();
+				auto& cam2 = m_EntityCamera2.GetComponent<CameraComponent>();
+
+				if (ImGui::Checkbox("Cam1", &m_PrimaryCamera)) {
+					cam1.Primary = m_PrimaryCamera;
+					cam2.Primary = !m_PrimaryCamera;
+				}
+				{
+					float size = cam2.Camera.GetOrthographicSize();
+					if (ImGui::DragFloat("Cam2 size", &size))
+						cam2.Camera.SetOrthographicSize(size);
+
 				}
 
 				ImGui::End();
@@ -177,6 +216,8 @@ namespace Hazel {
 			{
 				m_FrameBuffer->Resize((uint32_t)m_ViewPortSize.x, (uint32_t)m_ViewPortSize.y);
 				m_CameraController.OnResize(m_ViewPortSize.x, m_ViewPortSize.y);
+
+				m_ActiveScene->OnViewportResize(static_cast<uint32_t>(m_ViewPortSize.x), static_cast<uint32_t>(m_ViewPortSize.y));
 			}
 		}
 
@@ -198,14 +239,14 @@ namespace Hazel {
 
 			m_FrameBuffer->Bind();
 
-			RenderCommand::SetClearColor({ 0.07f, 0.07f, 0.07f, 1.0f });
+			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 			RenderCommand::Clear();
 		}		
 
 		{
 			HZ_PROFILE_SCOPE("OnUpdate::Render::Draw");
 
-			// Render draw
+			// Draw scene
 			m_ActiveScene->OnUpdate(ts);
 
 			m_FrameBuffer->Unbind();

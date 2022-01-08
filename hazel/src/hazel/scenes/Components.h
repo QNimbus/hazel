@@ -1,6 +1,7 @@
 #pragma once
 
-#include "hazel/renderer/Camera.h"
+#include "hazel/scenes/SceneCamera.h"
+#include "hazel/scenes/ScriptableEntity.h"
 
 #include <glm/glm.hpp>
 
@@ -37,13 +38,32 @@ namespace Hazel {
 	};
 
 	struct CameraComponent {
-		Hazel::CameraComp Camera;
+		SceneCamera Camera;
 		bool Primary = true; // TODO: Think about moving to scene
+		bool FixedAspectRatio = false;
 
 		CameraComponent() = default; // Constructor
 		CameraComponent(const CameraComponent&) = default; // Copy constructor
-		CameraComponent(const glm::mat4& projection)
-			: Camera(projection) {}
+	};
 
+	struct NativeScriptComponent {
+		ScriptableEntity* Instance = nullptr;
+
+		std::function<void()> CreateFunction;
+		std::function<void()> DestroyFunction;
+
+		std::function<void(ScriptableEntity*)> OnCreateFunction;
+		std::function<void(ScriptableEntity*)> OnDestroyFunction;
+		std::function<void(ScriptableEntity*, Timestep)> OnUpdateFunction;
+
+		template<typename T>
+		void Bind() {
+			CreateFunction = [&]() { Instance = new T();  };
+			DestroyFunction = [&]() { delete static_cast<T*>(Instance); Instance = nullptr; };
+
+			OnCreateFunction = [](ScriptableEntity* instance) { static_cast<T*>(instance)->OnCreate(); };
+			OnDestroyFunction = [](ScriptableEntity* instance) { static_cast<T*>(instance)->OnDestroy(); };
+			OnUpdateFunction = [](ScriptableEntity* instance, Timestep ts) { static_cast<T*>(instance)->OnUpdate(ts); };
+		};
 	};
 }

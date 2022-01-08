@@ -17,6 +17,7 @@
 #include "hazel/scenes/Scene.h"
 #include "hazel/scenes/Entity.h"
 #include "hazel/scenes/Components.h"
+#include "hazel/scenes/ScriptableEntity.h"
 
 // -- Renderer    ---------
 
