@@ -29,19 +29,20 @@ namespace Hazel {
 
 		// Update scripts (and initialize if not exists - this is temporary)
 		{
-			m_Registry.view<NativeScriptComponent>().each([&, ts](auto entity, auto& scriptComponent) {
-				if (scriptComponent.Instance == nullptr) {
-					scriptComponent.CreateFunction();
+			m_Registry.view<NativeScriptComponent>().each([&, ts](auto entity, auto& nsc) {
+				// TODO: Move to Scene::OnScenePlay
+				{
+					if (nsc.Instance == nullptr) {
+						nsc.Instance = nsc.CreateScript();
 
-					HZ_CORE_ASSERT(scriptComponent.Instance, "Error instantiating ScriptableEntity");
-					
-					static_cast<ScriptableEntity*>(scriptComponent.Instance)->m_Entity = Entity{ entity, this };
+						HZ_CORE_ASSERT(nsc.Instance, "Error instantiating ScriptableEntity");
 
-					if (scriptComponent.OnCreateFunction)
-						scriptComponent.OnCreateFunction(scriptComponent.Instance);
-				}
-				if (scriptComponent.OnUpdateFunction)
-					scriptComponent.OnUpdateFunction(scriptComponent.Instance, ts);
+						nsc.Instance->m_Entity = Entity{ entity, this };						
+						nsc.Instance->OnCreate();
+					}
+				}				
+
+				nsc.Instance->OnUpdate(ts);
 				});
 		}
 
@@ -51,7 +52,7 @@ namespace Hazel {
 		{
 			auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
 			for (auto entity : group) {
-				auto& [cameraComponent, transformComponent] = group.get<CameraComponent, TransformComponent>(entity);
+				auto [cameraComponent, transformComponent] = group.get<CameraComponent, TransformComponent>(entity);
 
 				if (cameraComponent.Primary) {
 					mainCamera = &cameraComponent.Camera;
@@ -66,7 +67,7 @@ namespace Hazel {
 
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group) {
-				auto& [transformComponent, spriteComponent] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				auto [transformComponent, spriteComponent] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
 				Renderer2D::DrawQuad(transformComponent, spriteComponent.Color);
 			}

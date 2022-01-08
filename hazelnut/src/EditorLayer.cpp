@@ -35,17 +35,30 @@ namespace Hazel {
 
 			m_EntityCamera = m_ActiveScene->CreateEntity("Scene camera");
 			m_EntityCamera2 = m_ActiveScene->CreateEntity("Clip space camera");
-			m_EntitySquare = m_ActiveScene->CreateEntity("Square");
+			m_EntitySquare = m_ActiveScene->CreateEntity("Random square");
 			m_EntityCamera.AddComponent<CameraComponent>();
 			auto& secondCam = m_EntityCamera2.AddComponent<CameraComponent>();
 			secondCam.Primary = false;
-			secondCam.Camera.SetOrthographicSize(4.0f);
+			secondCam.Camera.SetOrthographicSize(50.0f);
 			m_EntitySquare.AddComponent<SpriteRendererComponent>();
+
+			auto& tc1 = m_EntityCamera.GetComponent<TransformComponent>();
+			auto& tc2 = m_EntityCamera2.GetComponent<TransformComponent>();
+
+			class RandomizeSquareColor : public ScriptableEntity {
+				void OnCreate() {
+					auto& sprite = GetComponent<SpriteRendererComponent>();
+
+					sprite.Color = glm::vec4(Random::Float(), Random::Float(), Random::Float(), 1.0f);
+				}
+			};
 
 			class CameraController : public ScriptableEntity {
 			public:
 				void OnCreate() {
-					std::cout << "OnCreate was called"  << std::endl;
+					auto& transform = GetComponent<TransformComponent>().Transform;
+					transform[3].x = (Random::Float() * 12.0f) - 6.0f;
+					transform[3].y = (Random::Float() * 9.0f) - 4.5f;
 				}
 
 				void OnDestroy() {
@@ -55,20 +68,25 @@ namespace Hazel {
 				void OnUpdate(Timestep ts) {
 					static float speed = 5.0f;
 
+					auto& camera = GetComponent<CameraComponent>();
 					auto& transform = GetComponent<TransformComponent>().Transform;
 					
-					if (Input::IsKeyPressed(KeyCode::A))
-						transform[3].x -= speed * ts;
-					else if (Input::IsKeyPressed(KeyCode::D))
-						transform[3].x += speed * ts;
-					if (Input::IsKeyPressed(KeyCode::S))
-						transform[3].y -= speed * ts;
-					else if (Input::IsKeyPressed(KeyCode::W))
-						transform[3].y += speed * ts;
+					if (camera.Primary) {
+						if (Input::IsKeyPressed(KeyCode::A))
+							transform[3].x -= speed * ts;
+						else if (Input::IsKeyPressed(KeyCode::D))
+							transform[3].x += speed * ts;
+						if (Input::IsKeyPressed(KeyCode::S))
+							transform[3].y -= speed * ts;
+						else if (Input::IsKeyPressed(KeyCode::W))
+							transform[3].y += speed * ts;
+					}					
 				}
 			};
 
 			m_EntityCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+			m_EntityCamera2.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+			m_EntitySquare.AddComponent<NativeScriptComponent>().Bind<RandomizeSquareColor>();
 		}
 	}
 

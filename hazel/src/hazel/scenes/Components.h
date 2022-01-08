@@ -49,9 +49,20 @@ namespace Hazel {
 	struct NativeScriptComponent {
 		ScriptableEntity* Instance = nullptr;
 
+		ScriptableEntity* (*CreateScript)(void);
+		void (*DestroyScript)(NativeScriptComponent*);
+
+		template<typename T>
+		void Bind() {
+			CreateScript = []() { return static_cast<ScriptableEntity*>(new T());  };
+			DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->Instance; nsc->Instance = nullptr; };
+		};
+
+		#if OLD_CODE
 		std::function<void()> CreateFunction;
 		std::function<void()> DestroyFunction;
 
+		 //To avoid using virtual functions
 		std::function<void(ScriptableEntity*)> OnCreateFunction;
 		std::function<void(ScriptableEntity*)> OnDestroyFunction;
 		std::function<void(ScriptableEntity*, Timestep)> OnUpdateFunction;
@@ -65,5 +76,6 @@ namespace Hazel {
 			OnDestroyFunction = [](ScriptableEntity* instance) { static_cast<T*>(instance)->OnDestroy(); };
 			OnUpdateFunction = [](ScriptableEntity* instance, Timestep ts) { static_cast<T*>(instance)->OnUpdate(ts); };
 		};
+		#endif
 	};
 }
