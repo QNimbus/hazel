@@ -10,3 +10,6 @@
 [submodule "hazel/vendor/imgui"]
 	path = hazel/vendor/imgui
 	url = git@github.com:QNimbus/imgui.git
+[submodule "hazel/vendor/yaml-cpp"]
+	path = hazel/vendor/yaml-cpp
+	url = git@github.com:QNimbus/yaml-cpp.git
