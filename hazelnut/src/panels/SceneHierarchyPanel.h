@@ -1,5 +1,7 @@
 #pragma once
 
+#include "hazel/scenes/Entity.h"
+
 namespace Hazel {
 
 	class SceneHierarchyPanel
@@ -13,6 +15,8 @@ namespace Hazel {
 		void OnImGuiRender();
 
 	private:
+		template<typename T, typename UIFunction>
+		static void DrawComponent(const std::string& name, Entity entity, UIFunction uiFunction);
 		void DrawComponents(const Entity& entity);
 		void DrawEntityNode(const Entity& entity);
 

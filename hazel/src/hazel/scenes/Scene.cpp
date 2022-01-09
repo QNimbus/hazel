@@ -25,6 +25,10 @@ namespace Hazel {
 		return entity;
 	}
 
+	void Scene::DestroyEntity(Entity entity) {
+		m_Registry.destroy(entity);
+	}
+
 	void Scene::OnUpdate(Timestep ts) {
 
 		// Update scripts (and initialize if not exists - this is temporary)
@@ -48,7 +52,7 @@ namespace Hazel {
 
 		// Render sprites
 		CameraComp* mainCamera = nullptr;
-		glm::mat4* cameraTransform = nullptr;
+		glm::mat4 cameraTransform;
 		{
 			auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
 			for (auto entity : group) {
@@ -56,20 +60,20 @@ namespace Hazel {
 
 				if (cameraComponent.Primary) {
 					mainCamera = &cameraComponent.Camera;
-					cameraTransform = &transformComponent.Transform;
+					cameraTransform = transformComponent.GetTransform();
 					break;
 				}
 			}
 		}
 
 		if (mainCamera) {
-			Renderer2D::BeginScene(mainCamera->GetProjection(), *cameraTransform);
+			Renderer2D::BeginScene(*mainCamera, cameraTransform);
 
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group) {
 				auto [transformComponent, spriteComponent] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-				Renderer2D::DrawQuad(transformComponent, spriteComponent.Color);
+				Renderer2D::DrawQuad(transformComponent.GetTransform(), spriteComponent.Color);
 			}
 
 			Renderer2D::EndScene();
@@ -86,5 +90,31 @@ namespace Hazel {
 				cameraComponent.Camera.SetViewportSize(width, height);
 			}
 		}
+	}
+
+	template<typename T>
+	void Scene::OnComponentAdded(Entity entity, T& component) {
+		static_assert(false);
+	}
+
+	template<>
+	void Scene::OnComponentAdded(Entity entity, TransformComponent& component) {
+	}
+
+	template<>
+	void Scene::OnComponentAdded(Entity entity, SpriteRendererComponent& component) {
+	}
+
+	template<>
+	void Scene::OnComponentAdded(Entity entity, CameraComponent& component) {
+		component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+	}
+
+	template<>
+	void Scene::OnComponentAdded(Entity entity, NativeScriptComponent& component) {
+	}
+
+	template<>
+	void Scene::OnComponentAdded(Entity entity, TagComponent& component) {
 	}
 }

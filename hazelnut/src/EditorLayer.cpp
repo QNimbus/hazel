@@ -34,9 +34,9 @@ namespace Hazel {
 		{
 			m_ActiveScene = CreateRef<Scene>();
 
-			m_EntityCamera = m_ActiveScene->CreateEntity("Scene camera");
-			m_EntityCamera2 = m_ActiveScene->CreateEntity("Clip space camera");
-			m_EntitySquare = m_ActiveScene->CreateEntity("Random square");
+			m_EntityCamera = m_ActiveScene->CreateEntity("Camera A");
+			m_EntityCamera2 = m_ActiveScene->CreateEntity("Camera B");
+			m_EntitySquare = m_ActiveScene->CreateEntity("Square");
 			m_EntityCamera.AddComponent<CameraComponent>();
 			auto& secondCam = m_EntityCamera2.AddComponent<CameraComponent>();
 			secondCam.Primary = false;
@@ -57,9 +57,6 @@ namespace Hazel {
 			class CameraController : public ScriptableEntity {
 			public:
 				void OnCreate() {
-					auto& transform = GetComponent<TransformComponent>().Transform;
-					transform[3].x = (Random::Float() * 12.0f) - 6.0f;
-					transform[3].y = (Random::Float() * 9.0f) - 4.5f;
 				}
 
 				void OnDestroy() {
@@ -70,17 +67,17 @@ namespace Hazel {
 					static float speed = 5.0f;
 
 					auto& camera = GetComponent<CameraComponent>();
-					auto& transform = GetComponent<TransformComponent>().Transform;
+					auto& transformComponent = GetComponent<TransformComponent>();
 					
 					if (camera.Primary) {
 						if (Input::IsKeyPressed(KeyCode::A))
-							transform[3].x -= speed * ts;
+							transformComponent.Translation.x -= speed * ts;
 						else if (Input::IsKeyPressed(KeyCode::D))
-							transform[3].x += speed * ts;
+							transformComponent.Translation.x += speed * ts;
 						if (Input::IsKeyPressed(KeyCode::S))
-							transform[3].y -= speed * ts;
+							transformComponent.Translation.y -= speed * ts;
 						else if (Input::IsKeyPressed(KeyCode::W))
-							transform[3].y += speed * ts;
+							transformComponent.Translation.y += speed * ts;
 					}					
 				}
 			};
@@ -141,11 +138,16 @@ namespace Hazel {
 
 			// DockSpace
 			ImGuiIO& io = ImGui::GetIO();
+			ImGuiStyle& style = ImGui::GetStyle();
+			auto origMinSize = style.WindowMinSize;
+			style.WindowMinSize.x = 370.0f;
 			if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 			{
 				ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 				ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 			}
+
+			style.WindowMinSize = origMinSize;
 
 			if (ImGui::BeginMenuBar())
 			{
@@ -165,10 +167,10 @@ namespace Hazel {
 			// Hierarchy panel
 			m_SceneHierarchyPanel.OnImGuiRender();
 
-			// Settings panel
+			// Statistics panel
 			{
-				// ImGui Settings window
-				ImGui::Begin("Settings");
+				// ImGui Stats window
+				ImGui::Begin("Statistics");
 
 				auto stats = Renderer2D::GetStatistics();
 				ImGui::Text("Renderer2D Stats:");
@@ -176,31 +178,6 @@ namespace Hazel {
 				ImGui::Text("Quads: %d", stats.QuadCount);
 				ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 				ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
-				if (m_EntitySquare) {
-					ImGui::Separator();
-					ImGui::Text("%s", m_EntitySquare.GetComponent<TagComponent>().Tag.c_str());
-
-					auto& color = m_EntitySquare.GetComponent<SpriteRendererComponent>().Color;
-					ImGui::ColorEdit4("Square Color", glm::value_ptr(color));
-					ImGui::Separator();
-				}
-
-				ImGui::DragFloat2("Cam1 transform", glm::value_ptr(m_EntityCamera.GetComponent<TransformComponent>().Transform[3]));
-
-				auto& cam1 = m_EntityCamera.GetComponent<CameraComponent>();
-				auto& cam2 = m_EntityCamera2.GetComponent<CameraComponent>();
-
-				if (ImGui::Checkbox("Cam1", &m_PrimaryCamera)) {
-					cam1.Primary = m_PrimaryCamera;
-					cam2.Primary = !m_PrimaryCamera;
-				}
-				{
-					float size = cam2.Camera.GetOrthographicSize();
-					if (ImGui::DragFloat("Cam2 size", &size))
-						cam2.Camera.SetOrthographicSize(size);
-
-				}
 
 				ImGui::End();
 			}
@@ -219,7 +196,7 @@ namespace Hazel {
 				m_ViewPortSize = { viewPortPanelSize.x, viewPortPanelSize.y };
 
 				uint32_t textureID = m_FrameBuffer->GetColorAttachmentRendererID();
-				ImGui::Image((void*)textureID, ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+				ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{m_ViewPortSize.x, m_ViewPortSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
 
 				ImGui::End();
 				ImGui::PopStyleVar();
