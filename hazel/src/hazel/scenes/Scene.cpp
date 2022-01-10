@@ -9,11 +9,10 @@
 
 namespace Hazel {
 	
-	Scene::Scene() {
-	}
+	Scene::Scene(const std::string& name /*= "Untitled scene"*/)
+		: m_SceneName(name) {}
 
-	Scene::~Scene() {
-	}
+	Scene::~Scene() {}
 
 	Entity Scene::CreateEntity(const std::string& name) {
 		Entity entity { m_Registry.create(), this };

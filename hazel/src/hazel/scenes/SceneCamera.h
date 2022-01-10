@@ -2,6 +2,8 @@
 
 #include "hazel/renderer/Camera.h"
 
+#include <ostream>
+
 namespace Hazel {
 	
 	class SceneCamera : public CameraComp {

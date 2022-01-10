@@ -1,0 +1,47 @@
+Scene: Untitled scene
+Entities:
+  - Entity: ebc40900-f3f3-445e-8615-278fb9e900da
+    TagComponent:
+      Tag: Square
+    TransformComponent:
+      Translation: vec3(0.000000, 0.000000, 0.000000)
+      Rotation: vec3(0.000000, 0.000000, 0.000000)
+      Scale: vec3(1.000000, 1.000000, 1.000000)
+    SpriteRendererComponent:
+      Color: vec4(1.000000, 1.000000, 1.000000, 1.000000)
+  - Entity: ebc40900-f3f3-445e-8615-278fb9e900da
+    TagComponent:
+      Tag: Camera B
+    TransformComponent:
+      Translation: vec3(0.000000, 0.000000, 0.000000)
+      Rotation: vec3(0.000000, 0.000000, 0.000000)
+      Scale: vec3(1.000000, 1.000000, 1.000000)
+    CameraComponent:
+      Primary: false
+      FixedAspectRatio: false
+      Camera:
+        OrthographicNearClip: -1
+        OrthographicFarClip: 1
+        OrthographicSize: 50
+        PerspectiveNearClip: 0.00999999978
+        PerspectiveFarClip: 1000
+        PerspectiveVerticalFOV: 0.785398185
+        ProjectionType: ORTHOGRAPHIC
+  - Entity: ebc40900-f3f3-445e-8615-278fb9e900da
+    TagComponent:
+      Tag: Camera A
+    TransformComponent:
+      Translation: vec3(0.000000, 0.000000, 0.000000)
+      Rotation: vec3(0.000000, 0.000000, 0.000000)
+      Scale: vec3(1.000000, 1.000000, 1.000000)
+    CameraComponent:
+      Primary: true
+      FixedAspectRatio: false
+      Camera:
+        OrthographicNearClip: -1
+        OrthographicFarClip: 1
+        OrthographicSize: 10
+        PerspectiveNearClip: 0.00999999978
+        PerspectiveFarClip: 1000
+        PerspectiveVerticalFOV: 0.785398185
+        ProjectionType: ORTHOGRAPHIC

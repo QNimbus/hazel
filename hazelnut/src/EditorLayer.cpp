@@ -1,6 +1,8 @@
 #include "hznpch.h"
 #include "EditorLayer.h"
 
+#include "hazel/scenes/SceneSerializer.h"
+
 #include <imgui/imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -34,7 +36,7 @@ namespace Hazel {
 		{
 			m_ActiveScene = CreateRef<Scene>();
 
-			m_EntityCamera = m_ActiveScene->CreateEntity("Camera A");
+			/*m_EntityCamera = m_ActiveScene->CreateEntity("Camera A");
 			m_EntityCamera2 = m_ActiveScene->CreateEntity("Camera B");
 			m_EntitySquare = m_ActiveScene->CreateEntity("Square");
 			m_EntityCamera.AddComponent<CameraComponent>();
@@ -44,7 +46,7 @@ namespace Hazel {
 			m_EntitySquare.AddComponent<SpriteRendererComponent>();
 
 			auto& tc1 = m_EntityCamera.GetComponent<TransformComponent>();
-			auto& tc2 = m_EntityCamera2.GetComponent<TransformComponent>();
+			auto& tc2 = m_EntityCamera2.GetComponent<TransformComponent>();*/
 
 			class RandomizeSquareColor : public ScriptableEntity {
 				void OnCreate() {
@@ -82,9 +84,16 @@ namespace Hazel {
 				}
 			};
 
-			m_EntityCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+			/*m_EntityCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 			m_EntityCamera2.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-			m_EntitySquare.AddComponent<NativeScriptComponent>().Bind<RandomizeSquareColor>();
+			m_EntitySquare.AddComponent<NativeScriptComponent>().Bind<RandomizeSquareColor>();*/
+
+			//Ref<Scene> tempScene = CreateRef<Scene>();
+			//SceneSerializer serializer(m_ActiveScene);
+			//SceneSerializer deserializer(m_ActiveScene);
+
+			//serializer.Serialize("assets/scenes/Scene.yaml");
+			//deserializer.Deserialize("assets/scenes/Scene.yaml");
 		}
 
 		// Panels
@@ -156,6 +165,16 @@ namespace Hazel {
 					// Disabling fullscreen would allow the window to be moved to the front of other windows, 
 					// which we can't undo at the moment without finer window depth/z control.
 					//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
+
+					if (ImGui::MenuItem("Serialize")) {
+						SceneSerializer serialize(m_ActiveScene);
+						serialize.Serialize("assets/scenes/Scene.yaml");
+					}
+
+					if (ImGui::MenuItem("Derialize")) {
+						SceneSerializer serialize(m_ActiveScene);
+						serialize.Deserialize("assets/scenes/Scene.yaml");
+					}
 
 					if (ImGui::MenuItem("Exit")) Application::Get().Close();
 					ImGui::EndMenu();

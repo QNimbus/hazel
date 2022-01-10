@@ -12,7 +12,7 @@ namespace Hazel {
 	class Scene
 	{
 	public:
-		Scene();
+		Scene(const std::string& name = "Untitled scene");
 		~Scene();
 
 		Entity CreateEntity(const std::string& name = std::string());
@@ -27,8 +27,10 @@ namespace Hazel {
 	private:
 		entt::registry m_Registry;
 		uint32_t m_ViewportWidth, m_ViewportHeight;
+		std::string m_SceneName;
 
 		friend class Entity;
+		friend class SceneSerializer;
 		friend class SceneHierarchyPanel;
 	};
 }
