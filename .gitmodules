@@ -13,3 +13,6 @@
 [submodule "hazel/vendor/yaml-cpp"]
 	path = hazel/vendor/yaml-cpp
 	url = git@github.com:QNimbus/yaml-cpp.git
+[submodule "hazel/vendor/ImGuizmo"]
+	path = hazel/vendor/ImGuizmo
+	url = git@github.com:QNimbus/ImGuizmo.git
