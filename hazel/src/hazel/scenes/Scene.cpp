@@ -12,7 +12,8 @@ namespace Hazel {
 	Scene::Scene(const std::string& name /*= "Untitled scene"*/)
 		: m_SceneName(name) {}
 
-	Scene::~Scene() {}
+	Scene::~Scene() {
+	}
 
 	Entity Scene::CreateEntity(const std::string& name) {
 		Entity entity { m_Registry.create(), this };
@@ -80,6 +81,10 @@ namespace Hazel {
 	}
 	
 	void Scene::OnViewportResize(uint32_t width, uint32_t height) {
+		// Store viewport dimensions
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
+
 		// Resize our non-fixed aspect ratio cameras
 		auto view = m_Registry.view<CameraComponent>();
 		for (auto entity : view) {

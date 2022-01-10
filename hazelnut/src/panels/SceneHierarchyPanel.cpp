@@ -13,6 +13,9 @@ namespace Hazel {
 	}
 
 	void SceneHierarchyPanel::SetContext(const Ref<Scene>& context) {
+		// Deselect any previously selected entities to prevent error
+		m_SelectionContext = { };
+
 		m_Context = context;
 	}
 
@@ -132,7 +135,7 @@ namespace Hazel {
 			ImGui::PopStyleColor(3);
 
 			ImGui::SameLine();
-			if (ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, format))
+			if (ImGui::DragFloat("##X", &values.x, 0.01f, 0.0f, 0.0f, format))
 				changed = true;
 			ImGui::PopItemWidth();
 			ImGui::SameLine();
@@ -149,7 +152,7 @@ namespace Hazel {
 			ImGui::PopStyleColor(3);
 
 			ImGui::SameLine();
-			if (ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, format))
+			if (ImGui::DragFloat("##Y", &values.y, 0.01f, 0.0f, 0.0f, format))
 				changed = true;
 			ImGui::PopItemWidth();
 			ImGui::SameLine();
@@ -166,7 +169,7 @@ namespace Hazel {
 			ImGui::PopStyleColor(3);
 
 			ImGui::SameLine();
-			if (ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, format))
+			if (ImGui::DragFloat("##Z", &values.z, 0.01f, 0.0f, 0.0f, format))
 				changed = true;
 			ImGui::PopItemWidth();
 		}

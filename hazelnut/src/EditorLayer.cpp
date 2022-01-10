@@ -72,13 +72,13 @@ namespace Hazel {
 					auto& transformComponent = GetComponent<TransformComponent>();
 					
 					if (camera.Primary) {
-						if (Input::IsKeyPressed(KeyCode::A))
+						if (Input::IsKeyPressed(Key::A))
 							transformComponent.Translation.x -= speed * ts;
-						else if (Input::IsKeyPressed(KeyCode::D))
+						else if (Input::IsKeyPressed(Key::D))
 							transformComponent.Translation.x += speed * ts;
-						if (Input::IsKeyPressed(KeyCode::S))
+						if (Input::IsKeyPressed(Key::S))
 							transformComponent.Translation.y -= speed * ts;
-						else if (Input::IsKeyPressed(KeyCode::W))
+						else if (Input::IsKeyPressed(Key::W))
 							transformComponent.Translation.y += speed * ts;
 					}					
 				}
@@ -166,17 +166,24 @@ namespace Hazel {
 					// which we can't undo at the moment without finer window depth/z control.
 					//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
 
-					if (ImGui::MenuItem("Serialize")) {
-						SceneSerializer serialize(m_ActiveScene);
-						serialize.Serialize("assets/scenes/Scene.yaml");
+					if (ImGui::MenuItem("New", "Ctrl-N")) {
+						HZ_TRACE("Creating new empty scene");
+
+						NewScene();
 					}
 
-					if (ImGui::MenuItem("Derialize")) {
-						SceneSerializer serialize(m_ActiveScene);
-						serialize.Deserialize("assets/scenes/Scene.yaml");
-					}
+					if (ImGui::MenuItem("Open...", "Ctrl-O"))
+						LoadScene();
 
-					if (ImGui::MenuItem("Exit")) Application::Get().Close();
+					if (ImGui::MenuItem("Save", "Ctrl-S", false, false))
+						SaveSceneAs();
+
+					if (ImGui::MenuItem("Save as...", "Ctrl-Shift-S"))
+						SaveSceneAs();
+
+					if (ImGui::MenuItem("Exit"))
+						Application::Get().Close();
+
 					ImGui::EndMenu();
 				}
 
@@ -236,7 +243,7 @@ namespace Hazel {
 				m_ViewPortSize.x > 0.0f && m_ViewPortSize.y > 0.0f && // zero sized framebuffer is invalid
 				(spec.Width != m_ViewPortSize.x || spec.Height != m_ViewPortSize.y))
 			{
-				m_FrameBuffer->Resize((uint32_t)m_ViewPortSize.x, (uint32_t)m_ViewPortSize.y);
+				m_FrameBuffer->Resize(static_cast<uint32_t>(m_ViewPortSize.x), static_cast<uint32_t>(m_ViewPortSize.y));
 				m_CameraController.OnResize(m_ViewPortSize.x, m_ViewPortSize.y);
 
 				m_ActiveScene->OnViewportResize(static_cast<uint32_t>(m_ViewPortSize.x), static_cast<uint32_t>(m_ViewPortSize.y));
@@ -279,7 +286,83 @@ namespace Hazel {
 	void EditorLayer::OnEvent(Hazel::Event& event) {
 		// Pass events to camera controller
 		m_CameraController.OnEvent(event);
+
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<KeyPressedEvent>(HZ_BIND_EVENT_FN(EditorLayer::OnKeyPressedEvent));
 	}
 
+	bool EditorLayer::OnKeyPressedEvent(KeyPressedEvent& event) {
+		if (event.GetRepeatCount() > 0)
+			return false;
 
+		bool alt = Input::IsKeyPressed(Key::LeftAlt) || Input::IsKeyPressed(Key::RightAlt);
+		bool shift = Input::IsKeyPressed(Key::LeftShift) || Input::IsKeyPressed(Key::RightShift);
+		bool ctrl = Input::IsKeyPressed(Key::LeftControl) || Input::IsKeyPressed(Key::RightControl);
+
+		switch (event.GetKeyCode()) {
+			case Key::N : {
+					if (ctrl) {
+						NewScene();
+					}
+					break;
+				}
+			case Key::O: {
+				if (ctrl) {
+					LoadScene();
+				}
+				break;
+			}
+			case Key::S: {
+				if (ctrl && shift) {
+					SaveSceneAs();
+				}
+				break;
+			}
+		}		
+
+		return false;
+	}
+
+	void EditorLayer::NewScene() {
+		HZ_PROFILE_FUNCTION();
+
+		// Create new (empty) scene and deserialize selected file into it
+		m_ActiveScene = CreateRef<Scene>();
+
+		// Force viewport resize for the first frame
+		m_ActiveScene->OnViewportResize(static_cast<uint32_t>(m_ViewPortSize.x), static_cast<uint32_t>(m_ViewPortSize.y));
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+	}
+
+	void EditorLayer::LoadScene() {
+		HZ_PROFILE_FUNCTION();
+
+		// Open file dialog
+		std::string sceneFile = FileDialogs::OpenFile("Hazel scene files (*.hazel)\0*.hazel\0All Files\0*.*\0\0");
+
+		if (!sceneFile.empty()) {
+			NewScene();
+
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Deserialize(sceneFile);
+		}
+	}
+
+	void EditorLayer::SaveSceneAs() {
+		HZ_PROFILE_FUNCTION();
+
+		// Save file dialog
+		std::string sceneFile = FileDialogs::SaveFile("Hazel scene files (*.hazel)\0*.hazel\0All Files\0*.*\0\0");
+
+		if (!sceneFile.empty()) {
+			// Ensure .hazel file extension
+			//std::string::size_type pos = std::string(sceneFile).find(".hazel");
+			//if (pos == std::string::npos)
+			//	sceneFile.append(".hazel");
+
+			// Serialize active scene into scenefile
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Serialize(sceneFile);
+		}
+	}
 }
