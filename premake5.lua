@@ -88,7 +88,7 @@ project "Hazel"
     "GLFW_INCLUDE_NONE"
   }
 
-  filter "files:vendor/ImGuizmo/**.cpp"
+  filter "files:hazel/vendor/ImGuizmo/**.cpp"
   flags { "NoPCH" }
 
   filter "system:windows"

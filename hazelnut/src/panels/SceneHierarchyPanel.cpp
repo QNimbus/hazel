@@ -183,7 +183,7 @@ namespace Hazel {
 		return changed;
 	}
 
-	void SceneHierarchyPanel::DrawComponents(const Entity& entity) {
+	void SceneHierarchyPanel::DrawComponents(Entity entity) {
 		if (entity.HasComponent<TagComponent>()) {			
 				auto& tag = entity.GetComponent<TagComponent>().Tag;
 
@@ -304,7 +304,7 @@ namespace Hazel {
 			});
 	}
 
-	void SceneHierarchyPanel::DrawEntityNode(const Entity& entity) {
+	void SceneHierarchyPanel::DrawEntityNode(Entity entity) {
 		auto& tagComponent = entity.GetComponent<TagComponent>();
 		auto& tag = tagComponent.Tag;
 		bool deleteEntity = false;
