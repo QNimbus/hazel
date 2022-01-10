@@ -14,11 +14,13 @@ namespace Hazel {
 
 		void OnImGuiRender();
 
+		Entity GetSelectedEntity() const { return m_SelectionContext; }
+
 	private:
 		template<typename T, typename UIFunction>
 		static void DrawComponent(const std::string& name, Entity entity, UIFunction uiFunction);
-		void DrawComponents(const Entity& entity);
-		void DrawEntityNode(const Entity& entity);
+		void DrawComponents(Entity entity);
+		void DrawEntityNode(Entity entity);
 
 	private:
 		Ref<Scene> m_Context;

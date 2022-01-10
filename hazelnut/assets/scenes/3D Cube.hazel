@@ -3,6 +3,33 @@ Scene: Untitled scene
 Entities:
   - Entity: ebc40900-f3f3-445e-8615-278fb9e900da
     TagComponent:
+      Tag: Left
+    TransformComponent:
+      Translation: [-0.351000011, 0, 0.349999994]  # vec3(-0.351000, 0.000000, 0.350000)
+      Rotation: [0, -0.785398185, 0]  # vec3(0.000000, -0.785398, 0.000000)
+      Scale: [1, 1, 1]  # vec3(1.000000, 1.000000, 1.000000)
+    SpriteRendererComponent:
+      Color: [0, 0.596078455, 0.874509811, 1]  # vec4(0.000000, 0.596078, 0.874510, 1.000000)
+  - Entity: ebc40900-f3f3-445e-8615-278fb9e900da
+    TagComponent:
+      Tag: Top
+    TransformComponent:
+      Translation: [0, 0.5, 0]  # vec3(0.000000, 0.500000, 0.000000)
+      Rotation: [1.57079637, 0.785398185, 0]  # vec3(1.570796, 0.785398, 0.000000)
+      Scale: [1, 1, 1]  # vec3(1.000000, 1.000000, 1.000000)
+    SpriteRendererComponent:
+      Color: [0, 0.484336704, 0.709803939, 1]  # vec4(0.000000, 0.484337, 0.709804, 1.000000)
+  - Entity: ebc40900-f3f3-445e-8615-278fb9e900da
+    TagComponent:
+      Tag: Right
+    TransformComponent:
+      Translation: [0.354999989, 0, 0.349999994]  # vec3(0.355000, 0.000000, 0.350000)
+      Rotation: [0, 0.785398185, 0]  # vec3(0.000000, 0.785398, 0.000000)
+      Scale: [1, 1, 1]  # vec3(1.000000, 1.000000, 1.000000)
+    SpriteRendererComponent:
+      Color: [0, 0.433494717, 0.635294139, 1]  # vec4(0.000000, 0.433495, 0.635294, 1.000000)
+  - Entity: ebc40900-f3f3-445e-8615-278fb9e900da
+    TagComponent:
       Tag: Camera
     TransformComponent:
       Translation: [0, 1.70000005, 4]  # vec3(0.000000, 1.700000, 4.000000)
@@ -19,30 +46,3 @@ Entities:
         PerspectiveFarClip: 1000
         PerspectiveVerticalFOV: 0.785398185
         ProjectionType: 0  #  = Perspective
-  - Entity: ebc40900-f3f3-445e-8615-278fb9e900da
-    TagComponent:
-      Tag: Right
-    TransformComponent:
-      Translation: [0.354999989, 0, 0.349999994]  # vec3(0.355000, 0.000000, 0.350000)
-      Rotation: [0, 0.785398185, 0]  # vec3(0.000000, 0.785398, 0.000000)
-      Scale: [1, 1, 1]  # vec3(1.000000, 1.000000, 1.000000)
-    SpriteRendererComponent:
-      Color: [0, 0.433494717, 0.635294139, 1]  # vec4(0.000000, 0.433495, 0.635294, 1.000000)
-  - Entity: ebc40900-f3f3-445e-8615-278fb9e900da
-    TagComponent:
-      Tag: Top
-    TransformComponent:
-      Translation: [0, 0.5, 0]  # vec3(0.000000, 0.500000, 0.000000)
-      Rotation: [1.57079637, 0, 0.785398185]  # vec3(1.570796, 0.000000, 0.785398)
-      Scale: [1, 1, 1]  # vec3(1.000000, 1.000000, 1.000000)
-    SpriteRendererComponent:
-      Color: [0, 0.484336704, 0.709803939, 1]  # vec4(0.000000, 0.484337, 0.709804, 1.000000)
-  - Entity: ebc40900-f3f3-445e-8615-278fb9e900da
-    TagComponent:
-      Tag: Left
-    TransformComponent:
-      Translation: [-0.351000011, 0, 0.349999994]  # vec3(-0.351000, 0.000000, 0.350000)
-      Rotation: [0, -0.785398185, 0]  # vec3(0.000000, -0.785398, 0.000000)
-      Scale: [1, 1, 1]  # vec3(1.000000, 1.000000, 1.000000)
-    SpriteRendererComponent:
-      Color: [0, 0.596078455, 0.874509811, 1]  # vec4(0.000000, 0.596078, 0.874510, 1.000000)

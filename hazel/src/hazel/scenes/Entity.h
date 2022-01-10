@@ -18,7 +18,7 @@ namespace Hazel {
 		}
 
 		template<typename T, typename... Args>
-		T& AddComponent(Args&&... args) const {
+		T& AddComponent(Args&&... args) {
 			HZ_CORE_ASSERT(!HasComponent<T>(), "Entity already has component");
 
 			T& component = m_Scene->m_Registry.emplace<T>(m_EntityHandle, std::forward<Args>(args)...);			
@@ -28,7 +28,7 @@ namespace Hazel {
 		}
 
 		template<typename T>
-		T& GetComponent() const {
+		T& GetComponent() {
 			HZ_CORE_ASSERT(HasComponent<T>(), "Entity does not have component");
 
 			return m_Scene->m_Registry.get<T>(m_EntityHandle);
