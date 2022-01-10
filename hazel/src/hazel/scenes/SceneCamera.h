@@ -6,7 +6,7 @@
 
 namespace Hazel {
 	
-	class SceneCamera : public CameraComp {
+	class SceneCamera : public Camera {
 	public:
 		enum class ProjectionType { Perspective = 0, Orthographic = 1 };
 

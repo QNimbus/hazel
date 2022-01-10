@@ -26,8 +26,6 @@ namespace Hazel {
 		bool OnKeyPressedEvent(KeyPressedEvent& event);
 
 	private:
-		OrthographicCameraController m_CameraController;
-
 		Ref<Texture2D> m_CheckerboardTexture;
 		Ref<FrameBuffer> m_FrameBuffer;
 

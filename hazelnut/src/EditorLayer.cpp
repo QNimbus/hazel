@@ -13,7 +13,7 @@
 namespace Hazel {
 
 	EditorLayer::EditorLayer()
-		: Layer("HazelnutLayer"), m_CameraController(1280.0f / 720.0f, true)
+		: Layer("HazelnutLayer")
 	{
 	}
 
@@ -292,7 +292,7 @@ namespace Hazel {
 				(spec.Width != m_ViewPortSize.x || spec.Height != m_ViewPortSize.y))
 			{
 				m_FrameBuffer->Resize(static_cast<uint32_t>(m_ViewPortSize.x), static_cast<uint32_t>(m_ViewPortSize.y));
-				m_CameraController.OnResize(m_ViewPortSize.x, m_ViewPortSize.y);
+				//m_CameraController.OnResize(m_ViewPortSize.x, m_ViewPortSize.y);
 
 				m_ActiveScene->OnViewportResize(static_cast<uint32_t>(m_ViewPortSize.x), static_cast<uint32_t>(m_ViewPortSize.y));
 			}
@@ -302,8 +302,8 @@ namespace Hazel {
 		{
 			HZ_PROFILE_SCOPE("OnUpdate::CameraController");
 
-			if (m_ViewportFocused)
-				m_CameraController.OnUpdate(ts);
+			/*if (m_ViewportFocused)
+				m_CameraController.OnUpdate(ts);*/
 		}
 
 		// Reset statistics

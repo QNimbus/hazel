@@ -51,7 +51,7 @@ namespace Hazel {
 		}
 
 		// Render sprites
-		CameraComp* mainCamera = nullptr;
+		Camera* mainCamera = nullptr;
 		glm::mat4 cameraTransform;
 		{
 			auto group = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);

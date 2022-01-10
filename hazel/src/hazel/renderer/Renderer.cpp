@@ -14,15 +14,9 @@ namespace Hazel {
 		Renderer2D::Init();
 	}
 
-	void Renderer::BeginScene(Camera& camera)
-	{
-		//m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
-	}
+	void Renderer::BeginScene() {}
 
-	void Renderer::EndScene()
-	{
-
-	}
+	void Renderer::EndScene() {}
 
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4 transform) {
 		shader->Bind();
