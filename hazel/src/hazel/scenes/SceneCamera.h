@@ -21,13 +21,13 @@ namespace Hazel {
 
 
 		const ProjectionType GetProjectionType() const { return m_ProjectionType; }
-		void SetProjectionType(ProjectionType projectionType) { m_ProjectionType = projectionType; }
+		void SetProjectionType(ProjectionType projectionType) { m_ProjectionType = projectionType; CalculateProjection(); }
 
 		// Perspective
 		float GetPerspectiveVerticalFOV() const { return m_PerspectiveVerticalFOV; }
 		float GetPerspectiveNearClip() const { return m_PerspectiveNear; };
 		float GetPerspectiveFarClip()  const { return m_PerspectiveFar; };
-		void SetPerspectiveVerticalFOV(float verticalFOV) { m_PerspectiveVerticalFOV = verticalFOV; }
+		void SetPerspectiveVerticalFOV(float verticalFOV) { m_PerspectiveVerticalFOV = verticalFOV; CalculateProjection(); }
 		void SetPerspectiveNearClip(float nearClip) { m_PerspectiveNear = nearClip; CalculateProjection(); }
 		void SetPerspectiveFarClip(float farClip) { m_PerspectiveFar = farClip; CalculateProjection(); }
 

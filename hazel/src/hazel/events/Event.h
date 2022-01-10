@@ -41,7 +41,7 @@ namespace Hazel {
 		// Virtual function that can/may be overriden in derived class
 		virtual std::string ToString() const { return GetName(); }
 
-		inline bool IsInCategory(EventCategory category)
+		bool IsInCategory(EventCategory category)
 		{
 			return GetCategoryFlags() & (int)category;
 		}

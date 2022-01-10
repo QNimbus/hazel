@@ -17,6 +17,14 @@ namespace Hazel {
 		virtual void OnUpdate(Timestep ts) override;
 		virtual void OnEvent(Event& event) override;
 
+		void NewScene();
+		void LoadScene();
+		void SaveSceneAs();
+
+	private:
+		// Events
+		bool OnKeyPressedEvent(KeyPressedEvent& event);
+
 	private:
 		OrthographicCameraController m_CameraController;
 

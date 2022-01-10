@@ -2,10 +2,12 @@
 
 // For use by client applications that want to use the engine
 
-#include "hazel/core/Application.h"
-#include "hazel/core/Layer.h"
 #include "hazel/core/Log.h"
 #include "hazel/core/Assert.h"
+#include "hazel/core/Layer.h"
+#include "hazel/core/Application.h"
+
+#include "hazel/utilities/PlatformUtilities.h"
 
 #include "hazel/core/Timestep.h"
 

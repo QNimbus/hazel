@@ -135,6 +135,8 @@ namespace Hazel {
 	}
 
 	void SceneSerializer::Serialize(const std::string& filepath) {
+		HZ_PROFILE_FUNCTION();
+
 		YAML::Emitter out;
 
 		out << YAML::BeginDoc;
@@ -167,6 +169,8 @@ namespace Hazel {
 	}
 
 	bool SceneSerializer::Deserialize(const std::string& filepath) {
+		HZ_PROFILE_FUNCTION();
+
 		std::ifstream stream(filepath);
 		std::stringstream stringStream;
 		stringStream << stream.rdbuf();
