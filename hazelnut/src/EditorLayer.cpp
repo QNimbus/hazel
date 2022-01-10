@@ -333,14 +333,16 @@ namespace Hazel {
 
 	void EditorLayer::OnEvent(Hazel::Event& event) {
 		// Pass events to camera controller
-		m_CameraController.OnEvent(event);
+		//m_CameraController.OnEvent(event);
 
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<KeyPressedEvent>(HZ_BIND_EVENT_FN(EditorLayer::OnKeyPressedEvent));
 	}
 
 	bool EditorLayer::OnKeyPressedEvent(KeyPressedEvent& event) {
-		if (event.GetRepeatCount() > 0)
+		// Block further event processing for repeated keypresses and also in case a gizmo is used
+		// This is to prevent for example Ctrl-N (new scene) during gizmo operation
+		if (event.GetRepeatCount() > 0 || ImGuizmo::IsUsing())
 			return false;
 
 		bool alt = Input::IsKeyPressed(Key::LeftAlt) || Input::IsKeyPressed(Key::RightAlt);

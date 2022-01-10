@@ -37,7 +37,13 @@ namespace Hazel {
 		// Right-click in empty space in scene hierarchy window
 		if (ImGui::BeginPopupContextWindow(0, 1, false)) {
 			if (ImGui::MenuItem("Create new entity")) {
-				m_Context->CreateEntity("New entity");
+				{
+					// Ensure item is selected after creation
+					m_SelectionContext = m_Context->CreateEntity("New entity");
+
+					// Ensure focus for new entity tag field in properties panel					
+					m_NewEntity = true;
+				}
 			}
 
 			ImGui::EndPopup();
@@ -186,12 +192,21 @@ namespace Hazel {
 	void SceneHierarchyPanel::DrawComponents(Entity entity) {
 		if (entity.HasComponent<TagComponent>()) {			
 				auto& tag = entity.GetComponent<TagComponent>().Tag;
+				ImGuiInputTextFlags flags = 0;
 
 				char buffer[256];
 				memset(buffer, 0, sizeof(buffer));
 				strcpy_s(buffer, sizeof(buffer), tag.c_str());
 
-				if (ImGui::InputText("##Tags", buffer, sizeof(buffer))) {
+				// If we just created this entity - set keyboard focus
+				if (m_NewEntity) {
+					m_NewEntity = false;
+					ImGui::SetKeyboardFocusHere(0);
+
+				}
+
+				flags |= ImGuiInputTextFlags_AutoSelectAll;
+				if (ImGui::InputText("##Tags", buffer, sizeof(buffer), flags)) {
 					tag = std::string(buffer);
 				}
 		}
