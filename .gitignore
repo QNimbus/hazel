@@ -407,3 +407,6 @@ _obj/
 
 # Do include vendor binaries
 !vendor/bin
+
+# Do include debug/profiling source files
+!hazel/src/hazel/debug
