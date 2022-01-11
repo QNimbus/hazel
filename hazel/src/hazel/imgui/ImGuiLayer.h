@@ -25,5 +25,6 @@ namespace Hazel {
 
 	private:
 		bool m_BlockEvents = true;
+		float m_FontSize = 16.0f;
 	};
 }

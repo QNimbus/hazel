@@ -47,12 +47,15 @@ namespace Hazel {
 		return std::string();
 	}
 
-	std::string FileDialogs::SaveFile(const char* filter, const char* path /* = ""*/) {
+	std::string FileDialogs::SaveFile(const char* filter, const char* filename /*= nullptr*/, const char* path /*= nullptr*/) {
 		HWND window = glfwGetWin32Window(static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow()));
 
 		OPENFILENAMEA ofn;
 		CHAR szFile[260] = { 0 };
 		CHAR szPath[260] = { 0 };
+
+		if (filename)
+			strcpy_s(szFile, filename);
 
 		// Get current path
 		if (path)
@@ -75,6 +78,7 @@ namespace Hazel {
 		ofn.lpstrFilter = filter;
 		ofn.lpstrInitialDir = szPath;
 		ofn.nFilterIndex = 1;
+		ofn.lpstrTitle = "Save Scene As...";
 		// Extract default extension from filter
 		ofn.lpstrDefExt = strchr(filter, '\0') + 1;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
