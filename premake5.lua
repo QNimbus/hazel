@@ -177,59 +177,59 @@ project "Hazelnut"
     optimize "on"
     runtime "Release"
 
-    project "Sandbox"
-  location "sandbox"
-  kind "ConsoleApp"
-  language "C++"
-  cppdialect "C++17"
-  staticruntime "on"
+-- project "Sandbox"
+--   location "sandbox"
+--   kind "ConsoleApp"
+--   language "C++"
+--   cppdialect "C++17"
+--   staticruntime "on"
 
-  targetdir ("_bin/" .. outputdir .. "/%{prj.name}")
-  objdir ("_obj/" .. outputdir .. "/%{prj.name}")
+--   targetdir ("_bin/" .. outputdir .. "/%{prj.name}")
+--   objdir ("_obj/" .. outputdir .. "/%{prj.name}")
 
-  files
-  {
-    "%{prj.name}/src/**.h",
-    "%{prj.name}/src/**.cpp",
-  }
+--   files
+--   {
+--     "%{prj.name}/src/**.h",
+--     "%{prj.name}/src/**.cpp",
+--   }
 
-  includedirs
-  {
-    "hazel/src",
-    "hazel/vendor",
-    "hazel/vendor/spdlog/include",
-    "%{IncludeDir.glm}",
-    "%{IncludeDir.entt}"
-  }
+--   includedirs
+--   {
+--     "hazel/src",
+--     "hazel/vendor",
+--     "hazel/vendor/spdlog/include",
+--     "%{IncludeDir.glm}",
+--     "%{IncludeDir.entt}"
+--   }
 
-  links
-  {
-    "Hazel"
-  }
+--   links
+--   {
+--     "Hazel"
+--   }
 
-  defines
-  {
-    "_CRT_SECURE_NO_WARNINGS"
-  }
+--   defines
+--   {
+--     "_CRT_SECURE_NO_WARNINGS"
+--   }
 
-  filter "system:windows"
-    systemversion "latest" -- 10.0.19041.0
+--   filter "system:windows"
+--     systemversion "latest" -- 10.0.19041.0
 
-    defines "HZ_PLATFORM_WINDOWS"
+--     defines "HZ_PLATFORM_WINDOWS"
 
-  filter { "configurations:Debug"}
-    defines {
-      "HZ_DEBUG"
-    }
-    symbols "on"
-    runtime "Debug"
+--   filter { "configurations:Debug"}
+--     defines {
+--       "HZ_DEBUG"
+--     }
+--     symbols "on"
+--     runtime "Debug"
 
-  filter { "configurations:Release"}
-    defines "HZ_RELEASE"
-    optimize "on"
-    runtime "Release"
+--   filter { "configurations:Release"}
+--     defines "HZ_RELEASE"
+--     optimize "on"
+--     runtime "Release"
 
-  filter { "configurations:Dist" }
-    defines "HZ_DIST"
-    optimize "on"
-    runtime "Release"
+--   filter { "configurations:Dist" }
+--     defines "HZ_DIST"
+--     optimize "on"
+--     runtime "Release"
