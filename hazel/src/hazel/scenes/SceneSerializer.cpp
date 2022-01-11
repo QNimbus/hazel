@@ -179,7 +179,7 @@ namespace Hazel {
 		if (!data["Scene"])
 			return false;
 
-		std::string sceneName = data["Scene"].as<std::string>();
+		m_Scene->m_SceneName = data["Scene"].as<std::string>();
 
 		HZ_CORE_TRACE("Deserializing scene '{0}' from file '{1}'", m_Scene->m_SceneName, filepath);
 
@@ -242,7 +242,7 @@ namespace Hazel {
 					deserializedEntity.AddComponent<SpriteRendererComponent>(component);
 				}
 
-				HZ_CORE_TRACE("Deserialized entity with ID {0}, name = {1}", uuid, sceneName);
+				HZ_CORE_TRACE("Deserialized entity with ID {0}, name = {1}", uuid, entityName);
 			}
 		}
 		
