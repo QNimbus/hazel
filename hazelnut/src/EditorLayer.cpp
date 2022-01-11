@@ -28,7 +28,7 @@ namespace Hazel {
 		}
 
 		{
-			m_CheckerboardTexture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
+			//m_CheckerboardTexture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
 
 			FrameBufferSpecification frameBufferSpecification;
 			frameBufferSpecification.Width = 1280;
@@ -81,7 +81,7 @@ namespace Hazel {
 		}
 
 		// Panels
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		m_ScenePanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach() {
@@ -141,7 +141,9 @@ namespace Hazel {
 			}
 
 			style.WindowMinSize = origMinSize;
+		}
 
+		{
 			if (ImGui::BeginMenuBar())
 			{
 				if (ImGui::BeginMenu("File"))
@@ -159,13 +161,17 @@ namespace Hazel {
 					if (ImGui::MenuItem("Open...", "Ctrl-O"))
 						LoadScene();
 
-					if (ImGui::MenuItem("Save", "Ctrl-S", false, false))
-						SaveSceneAs();
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Save", "Ctrl-S", false, !m_SceneFileName.empty()))
+						SaveScene();
 
 					if (ImGui::MenuItem("Save as...", "Ctrl-Shift-S"))
 						SaveSceneAs();
 
-					if (ImGui::MenuItem("Exit"))
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Exit", "Ctrl-Shift-X"))
 						Application::Get().Close();
 
 					ImGui::EndMenu();
@@ -174,8 +180,8 @@ namespace Hazel {
 				ImGui::EndMenuBar();
 			}
 
-			// Hierarchy panel
-			m_SceneHierarchyPanel.OnImGuiRender();
+			// Scene panel
+			m_ScenePanel.OnImGuiRender();
 
 			// Statistics panel
 			{
@@ -201,15 +207,15 @@ namespace Hazel {
 				m_ViewportFocused = ImGui::IsWindowFocused();
 				m_ViewportHovered = ImGui::IsWindowHovered();
 				Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
-				
+
 				ImVec2 viewPortPanelSize = ImGui::GetContentRegionAvail();
 				m_ViewPortSize = { viewPortPanelSize.x, viewPortPanelSize.y };
 
 				uint32_t textureID = m_FrameBuffer->GetColorAttachmentRendererID();
-				ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{m_ViewPortSize.x, m_ViewPortSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+				ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ m_ViewPortSize.x, m_ViewPortSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 				// Gizmos
-				Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+				Entity selectedEntity = m_ScenePanel.GetSelectedEntity();
 				if (selectedEntity && m_GizmoType != -1) {
 					ImGuizmo::SetOrthographic(false);
 					ImGuizmo::SetDrawlist();
@@ -291,7 +297,7 @@ namespace Hazel {
 
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 			RenderCommand::Clear();
-		}		
+		}
 
 		// Update
 		{
@@ -328,41 +334,51 @@ namespace Hazel {
 
 		switch (event.GetKeyCode()) {
 			// Menu shortcuts
-			case Key::N : {
-					if (ctrl) {
-						NewScene();
-					}
-					break;
-				}
-			case Key::O: {
-				if (ctrl) {
-					LoadScene();
-				}
-				break;
+		case Key::N: {
+			if (ctrl) {
+				NewScene();
 			}
-			case Key::S: {
-				if (ctrl && shift) {
-					SaveSceneAs();
-				}
-				break;
+			break;
+		}
+		case Key::O: {
+			if (ctrl) {
+				LoadScene();
 			}
-			// Gizmo shortcuts
-			case Key::Q: {
-				m_GizmoType = -1;
-				break;
+			break;
+		}
+		case Key::S: {
+			if (ctrl && shift) {
+				SaveSceneAs();
+			} else
+			if (ctrl && !shift) {
+				if (!m_SceneFileName.empty())
+					SaveScene();
 			}
-			case Key::W: {
-				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
-				break;
+			break;
+		}
+		case Key::X: {
+			if (ctrl && shift) {
+				Application::Get().Close();
 			}
-			case Key::E: {
-				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
-				break;
-			}
-			case Key::R: {
-				m_GizmoType = ImGuizmo::OPERATION::SCALE;
-				break;
-			}
+			break;
+		}
+		// Gizmo shortcuts
+		case Key::Q: {
+			m_GizmoType = -1;
+			break;
+		}
+		case Key::W: {
+			m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+			break;
+		}
+		case Key::E: {
+			m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+			break;
+		}
+		case Key::R: {
+			m_GizmoType = ImGuizmo::OPERATION::SCALE;
+			break;
+		}
 		}
 
 		return false;
@@ -376,7 +392,7 @@ namespace Hazel {
 
 		// Force viewport resize for the first frame
 		m_ActiveScene->OnViewportResize(static_cast<uint32_t>(m_ViewPortSize.x), static_cast<uint32_t>(m_ViewPortSize.y));
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		m_ScenePanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::LoadScene() {
@@ -388,22 +404,32 @@ namespace Hazel {
 		if (!sceneFile.empty()) {
 			NewScene();
 
+			// Store filename
+			m_SceneFileName = sceneFile;
+
+			// Deserialize scenefile into active scene
 			SceneSerializer serializer(m_ActiveScene);
 			serializer.Deserialize(sceneFile);
 		}
+	}
+
+	void EditorLayer::SaveScene() {
+		HZ_PROFILE_FUNCTION();
+
+		// Serialize active scene into scenefile
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.Serialize(m_SceneFileName);
 	}
 
 	void EditorLayer::SaveSceneAs() {
 		HZ_PROFILE_FUNCTION();
 
 		// Save file dialog
-		std::string sceneFile = FileDialogs::SaveFile("Hazel scene files (*.hazel)\0*.hazel\0All Files\0*.*\0\0");
+		std::string sceneFile = FileDialogs::SaveFile("Hazel scene files (*.hazel)\0*.hazel\0All Files\0*.*\0\0", m_ActiveScene->GetName().c_str());
 
 		if (!sceneFile.empty()) {
-			// Ensure .hazel file extension
-			//std::string::size_type pos = std::string(sceneFile).find(".hazel");
-			//if (pos == std::string::npos)
-			//	sceneFile.append(".hazel");
+			// Store filename
+			m_SceneFileName = sceneFile;
 
 			// Serialize active scene into scenefile
 			SceneSerializer serializer(m_ActiveScene);

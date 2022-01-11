@@ -33,8 +33,9 @@ namespace Hazel {
         //io.ConfigViewportsNoAutoMerge = true;
         //io.ConfigViewportsNoTaskBarIcon = true;
 
-        io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Regular.ttf", Window::s_HighDPIScaleFactor * 18.0f); // Index 0
-        io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Bold.ttf", Window::s_HighDPIScaleFactor * 18.0f); // Index 1
+        io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Regular.ttf", Window::s_HighDPIScaleFactor * m_FontSize); // Index 0
+        io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Bold.ttf", Window::s_HighDPIScaleFactor * m_FontSize); // Index 1
+        io.Fonts->AddFontFromFileTTF("assets/fonts/sourcecodepro/SourceCodePro-Regular.ttf", Window::s_HighDPIScaleFactor * m_FontSize); // Index 2
 
         // Setup Dear ImGui style
         ImGui::StyleColorsDark();

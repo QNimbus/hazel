@@ -1,7 +1,8 @@
 #pragma once
 
 #include "hazel/renderer/Camera.h"
-#include "panels/SceneHierarchyPanel.h"
+
+#include "panels/ScenePanel.h"
 
 namespace Hazel {
 
@@ -20,6 +21,7 @@ namespace Hazel {
 
 		void NewScene();
 		void LoadScene();
+		void SaveScene();
 		void SaveSceneAs();
 
 	private:
@@ -27,21 +29,18 @@ namespace Hazel {
 		bool OnKeyPressedEvent(KeyPressedEvent& event);
 
 	private:
-		Ref<Texture2D> m_CheckerboardTexture;
-		Ref<FrameBuffer> m_FrameBuffer;
-
+		std::string m_SceneFileName;
 		Ref<Scene> m_ActiveScene;
+		Ref<FrameBuffer> m_FrameBuffer;
+		//Ref<Texture2D> m_CheckerboardTexture;
 
 		EditorCamera m_EditorCamera;
 
 		glm::vec2 m_ViewPortSize = { 0.0f, 0.0f };
-
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
-
 		int m_GizmoType = -1;
 
 		// Panels
-
-		SceneHierarchyPanel m_SceneHierarchyPanel;
+		ScenePanel m_ScenePanel;
 	};
 }

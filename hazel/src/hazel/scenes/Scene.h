@@ -25,6 +25,9 @@ namespace Hazel {
 
 		Entity GetPrimaryCameraEntity();
 
+		const std::string GetName() const { return m_SceneName; }
+		void SetName(const std::string& name) { m_SceneName = name; }
+
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
@@ -35,7 +38,7 @@ namespace Hazel {
 		std::string m_SceneName;
 
 		friend class Entity;
+		friend class ScenePanel;
 		friend class SceneSerializer;
-		friend class SceneHierarchyPanel;
 	};
 }
