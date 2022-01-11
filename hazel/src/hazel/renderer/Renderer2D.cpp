@@ -106,7 +106,7 @@ namespace Hazel {
 		delete[] s_Data.QuadVertexBufferBase;
 	}
 
-	void Renderer2D::BeginScene(const CameraComp& camera, glm::mat4& transform) {
+	void Renderer2D::BeginScene(const Camera& camera, glm::mat4& transform) {
 		HZ_PROFILE_FUNCTION();
 
 		glm::mat4 viewProjection = camera.GetProjection() * glm::inverse(transform);
@@ -121,11 +121,14 @@ namespace Hazel {
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 	}
 
-	void Renderer2D::BeginScene(const OrthographicCamera& camera) {
+	void Renderer2D::BeginScene(const EditorCamera& camera)
+	{
 		HZ_PROFILE_FUNCTION();
 
+		glm::mat4 viewProjection = camera.GetViewProjection();
+
 		s_Data.TextureShader->Bind();
-		s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		s_Data.TextureShader->SetMat4("u_ViewProjection", viewProjection);
 
 		// Reset texture slot index to 1
 		s_Data.TextureSlotIndex = 1;

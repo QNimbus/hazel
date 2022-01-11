@@ -26,6 +26,7 @@ void ParticleSystem::OnUpdate(Hazel::Timestep ts) {
 	}
 }
 
+#if DISABLE_OLD_CAMERA
 void ParticleSystem::OnRender(Hazel::OrthographicCamera& camera) {
 	Hazel::Renderer2D::BeginScene(camera);
 	for (auto& particle : m_ParticlePool)
@@ -45,6 +46,7 @@ void ParticleSystem::OnRender(Hazel::OrthographicCamera& camera) {
 	}
 	Hazel::Renderer2D::EndScene();
 }
+#endif
 
 void ParticleSystem::Emit(const ParticleProps& particleProps) {
 	// Get particle reference

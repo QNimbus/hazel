@@ -16,8 +16,8 @@ namespace Hazel {
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(const CameraComp& camera, glm::mat4& transform);
-		static void BeginScene(const OrthographicCamera& camera);
+		static void BeginScene(const Camera& camera, glm::mat4& transform);
+		static void BeginScene(const EditorCamera& camera);
 		static void EndScene();
 
 		static void Flush();

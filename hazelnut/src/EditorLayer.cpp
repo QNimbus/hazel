@@ -13,7 +13,7 @@
 namespace Hazel {
 
 	EditorLayer::EditorLayer()
-		: Layer("HazelnutLayer"), m_CameraController(1280.0f / 720.0f, true)
+		: Layer("HazelnutLayer")
 	{
 	}
 
@@ -37,19 +37,11 @@ namespace Hazel {
 		}
 
 		{
+			// Create new empty scene
 			m_ActiveScene = CreateRef<Scene>();
 
-			/*m_EntityCamera = m_ActiveScene->CreateEntity("Camera A");
-			m_EntityCamera2 = m_ActiveScene->CreateEntity("Camera B");
-			m_EntitySquare = m_ActiveScene->CreateEntity("Square");
-			m_EntityCamera.AddComponent<CameraComponent>();
-			auto& secondCam = m_EntityCamera2.AddComponent<CameraComponent>();
-			secondCam.Primary = false;
-			secondCam.Camera.SetOrthographicSize(50.0f);
-			m_EntitySquare.AddComponent<SpriteRendererComponent>();
-
-			auto& tc1 = m_EntityCamera.GetComponent<TransformComponent>();
-			auto& tc2 = m_EntityCamera2.GetComponent<TransformComponent>();*/
+			// Create editor camera
+			m_EditorCamera = EditorCamera(30.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
 
 			class RandomizeSquareColor : public ScriptableEntity {
 				void OnCreate() {
@@ -86,17 +78,6 @@ namespace Hazel {
 					}					
 				}
 			};
-
-			/*m_EntityCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-			m_EntityCamera2.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-			m_EntitySquare.AddComponent<NativeScriptComponent>().Bind<RandomizeSquareColor>();*/
-
-			//Ref<Scene> tempScene = CreateRef<Scene>();
-			//SceneSerializer serializer(m_ActiveScene);
-			//SceneSerializer deserializer(m_ActiveScene);
-
-			//serializer.Serialize("assets/scenes/Scene.yaml");
-			//deserializer.Deserialize("assets/scenes/Scene.yaml");
 		}
 
 		// Panels
@@ -239,10 +220,11 @@ namespace Hazel {
 					ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
 					// Camera transform and view
-					auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+					/*auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
 					const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
-					glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
-					const glm::mat4& cameraProjection = camera.GetProjection();
+					glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());*/
+					glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
+					const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
 
 					// Entity transform
 					auto& transformComponent = selectedEntity.GetComponent<TransformComponent>();
@@ -292,23 +274,14 @@ namespace Hazel {
 				(spec.Width != m_ViewPortSize.x || spec.Height != m_ViewPortSize.y))
 			{
 				m_FrameBuffer->Resize(static_cast<uint32_t>(m_ViewPortSize.x), static_cast<uint32_t>(m_ViewPortSize.y));
-				m_CameraController.OnResize(m_ViewPortSize.x, m_ViewPortSize.y);
+				m_EditorCamera.SetViewportSize(m_ViewPortSize.x, m_ViewPortSize.y);
 
 				m_ActiveScene->OnViewportResize(static_cast<uint32_t>(m_ViewPortSize.x), static_cast<uint32_t>(m_ViewPortSize.y));
 			}
 		}
 
-		// Update
-		{
-			HZ_PROFILE_SCOPE("OnUpdate::CameraController");
-
-			if (m_ViewportFocused)
-				m_CameraController.OnUpdate(ts);
-		}
-
 		// Reset statistics
 		Renderer2D::ResetStatistics();
-
 
 		// Render preparation
 		{
@@ -320,20 +293,24 @@ namespace Hazel {
 			RenderCommand::Clear();
 		}		
 
+		// Update
 		{
 			HZ_PROFILE_SCOPE("OnUpdate::Render::Draw");
 
-			// Draw scene
-			m_ActiveScene->OnUpdate(ts);
+			// Update editor camera
+			m_EditorCamera.OnUpdate(ts);
+
+			// Update scene
+			m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+			//m_ActiveScene->OnUpdateRuntime(ts);
 
 			m_FrameBuffer->Unbind();
 		}
-
 	}
 
 	void EditorLayer::OnEvent(Hazel::Event& event) {
-		// Pass events to camera controller
-		//m_CameraController.OnEvent(event);
+		// Pass events to the editor camera
+		m_EditorCamera.OnEvent(event);
 
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<KeyPressedEvent>(HZ_BIND_EVENT_FN(EditorLayer::OnKeyPressedEvent));
