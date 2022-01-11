@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hazel/renderer/Camera.h"
 #include "panels/SceneHierarchyPanel.h"
 
 namespace Hazel {
@@ -29,12 +30,9 @@ namespace Hazel {
 		Ref<Texture2D> m_CheckerboardTexture;
 		Ref<FrameBuffer> m_FrameBuffer;
 
-		bool m_PrimaryCamera = true;
-
-		Entity m_EntitySquare;
-		Entity m_EntityCamera, m_EntityCamera2;
-
 		Ref<Scene> m_ActiveScene;
+
+		EditorCamera m_EditorCamera;
 
 		glm::vec2 m_ViewPortSize = { 0.0f, 0.0f };
 

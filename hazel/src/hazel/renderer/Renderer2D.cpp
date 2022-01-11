@@ -121,6 +121,22 @@ namespace Hazel {
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 	}
 
+	void Renderer2D::BeginScene(const EditorCamera& camera)
+	{
+		HZ_PROFILE_FUNCTION();
+
+		glm::mat4 viewProjection = camera.GetViewProjection();
+
+		s_Data.TextureShader->Bind();
+		s_Data.TextureShader->SetMat4("u_ViewProjection", viewProjection);
+
+		// Reset texture slot index to 1
+		s_Data.TextureSlotIndex = 1;
+
+		s_Data.QuadIndexCount = 0;
+		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+	}
+
 	void Renderer2D::EndScene() {
 		HZ_PROFILE_FUNCTION();
 
